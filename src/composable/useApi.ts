@@ -4,13 +4,19 @@ import axios, { Axios } from "axios";
 import { locale } from "../i18n";
 
 export const apiSymbol: InjectionKey<Axios> = Symbol();
+export const apiGeoSymbol: InjectionKey<Axios> = Symbol();
+
 export const API_ROOT = import.meta.env.VITE_API_ROOT;
+export const GEO_ROOT = import.meta.env.VITE_GEO_ROOT;
 
 export function initApi() {
   const api = axios.create({
-    baseURL: `https://${API_ROOT}`,
+    baseURL: `https://${API_ROOT}/data/3.0/onecall`,
     headers: {
       "Accept-Language": locale.value,
+    },
+    params: {
+      appid: import.meta.env.API_KEY,
     },
   });
 
@@ -46,10 +52,62 @@ export function initApi() {
   return api;
 }
 
+export function initGeoApi() {
+  const geoApi = axios.create({
+    baseURL: `https://${GEO_ROOT}/v1/geo/`,
+    headers: {
+      "Accept-Language": locale.value,
+      "x-rapidapi-key": import.meta.env.GEO_KEY,
+    },
+    params: {
+      languageCode: locale.value,
+    },
+  });
+
+  geoApi.interceptors.request.use(async (config: any) => {
+    if (config.params == undefined) config.params = {};
+
+    if (config.method === "get") {
+      config.params["t"] = new Date().getTime();
+    }
+
+    config.headers["Accept-Language"] = locale.value;
+
+    return config;
+  });
+
+  geoApi.interceptors.response.use(
+    (response: any) => {
+      if (response.data?.success === false) {
+        return Promise.reject(response.data.error);
+      }
+      return Promise.resolve(response);
+    },
+    (error: any) => {
+      if (error.request && error.request.status === 500) {
+        console.error("Server error");
+        return Promise.reject(error);
+      } else {
+        return Promise.reject(error);
+      }
+    }
+  );
+
+  return geoApi;
+}
+
 export function useApi() {
   const api = inject(apiSymbol);
   if (!api) {
     throw new Error("Api not properly injected in app");
   }
   return api;
+}
+
+export function useGeoApi() {
+  const geoApi = inject(apiGeoSymbol);
+  if (!geoApi) {
+    throw new Error("Api not properly injected in app");
+  }
+  return geoApi;
 }
