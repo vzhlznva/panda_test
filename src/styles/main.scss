@@ -1,2 +1,9 @@
 @use "./abstracts/reset";
 @use "./abstracts/transitions";
+@use "./abstracts/mixins";
+
+@use "./variables/colors";
+@use "./variables/font";
+@use "./variables/responsive";
+
+@use "./global";

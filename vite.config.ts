@@ -89,7 +89,7 @@ export default defineConfig({
     Icons({
       compiler: "vue3",
       customCollections: {
-        popeye: FileSystemIconLoader("src/assets/svg/icons"),
+        weather: FileSystemIconLoader("src/assets/svg/icons"),
       },
     }) as PluginOption,
 

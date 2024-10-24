@@ -1,19 +1,26 @@
 <template>
   <div>
     <main>
+      <Sidebar />
       <RouterView v-slot="{ Component }">
         <transition name="fade-fast" mode="out-in">
           <component :is="Component" />
         </transition>
       </RouterView>
     </main>
-    <Footer/>
   </div>
 </template>
 
 <style>
 main {
-  padding: 30px;
-  min-height: 90vh;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 24px;
+  padding: 40px 0;
+  margin: 0 auto;
 }
 </style>

@@ -1,0 +1,37 @@
+@use "../variables/responsive";
+
+@mixin scrollbar() {
+  scrollbar-width: 6px;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    border-radius: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 5px;
+    background: var(--black2-800);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: var(--black-400);
+  }
+}
+
+@mixin devices($breakpoint) {
+  @if $breakpoint == tablet {
+    @media (max-width: $tablet-size) {
+      @content;
+    }
+  } @else if $breakpoint == mobile {
+    @media (max-width: $mobile-size) {
+      @content;
+    }
+  } @else if $breakpoint == mobile-horizontal {
+    @media (max-width: $mobile-size),
+      (max-height: 500px) and (orientation: landscape) {
+      @content;
+    }
+  }
+}
