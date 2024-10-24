@@ -1,0 +1,17 @@
+name: TEST TS
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ^9.4
+          run_install: true
+      - run: pnpm run test-ts
