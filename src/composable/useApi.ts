@@ -11,12 +11,13 @@ export const GEO_ROOT = import.meta.env.VITE_GEO_ROOT;
 
 export function initApi() {
   const api = axios.create({
-    baseURL: `https://${API_ROOT}/data/3.0/onecall`,
+    baseURL: `https://${API_ROOT}/data/2.5/`,
     headers: {
       "Accept-Language": locale.value,
     },
     params: {
-      appid: import.meta.env.API_KEY,
+      appid: "a86c06a87e2c2a38e2a4585b2a93e61c",
+      units: "metric",
     },
   });
 

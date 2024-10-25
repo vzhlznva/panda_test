@@ -112,6 +112,7 @@ onClickOutside(search, () => {
     opacity: 0;
     transform-origin: top;
     transition: transform 0.25s ease, opacity 0.25s ease;
+    pointer-events: none;
 
     &__wrapper {
       overflow-y: scroll;
@@ -171,9 +172,9 @@ onClickOutside(search, () => {
     }
 
     &.active {
-
       transform: scaleY(1);
       opacity: 1;
+      pointer-events: all;
     }
   }
 }

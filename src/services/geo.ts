@@ -1,7 +1,7 @@
-import { Axios } from "axios";
+import axios, { Axios } from "axios";
 import APIExceptionCatchAll from "/@src/utils/decorators";
 import { useGeoApi } from "../composable/useApi";
-import { City } from "../types/geo";
+import { City, LocationItem } from "../types/geo";
 import { locale } from "../i18n";
 
 @APIExceptionCatchAll
@@ -33,5 +33,22 @@ export class GeoService {
     });
 
     return data.data;
+  }
+
+  public async getCurrentLocation(): Promise<LocationItem> {
+    const { data } = await axios.get("https://get.geojs.io/v1/ip/geo.json");
+    const { city, country, latitude, longitude, timezone } = data;
+
+    const currLoc: LocationItem = {
+      city,
+      country,
+      latitude,
+      longitude,
+      timezone,
+    };
+
+    console.log(currLoc);
+
+    return currLoc;
   }
 }

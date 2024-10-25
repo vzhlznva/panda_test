@@ -3,9 +3,11 @@
     <main>
       <Sidebar />
       <RouterView v-slot="{ Component }">
-        <transition name="fade-fast" mode="out-in">
-          <component :is="Component" />
-        </transition>
+        <Suspense>
+          <transition name="fade-fast" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </Suspense>
       </RouterView>
     </main>
   </div>
