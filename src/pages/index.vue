@@ -4,7 +4,7 @@
 
 <template>
   <div class="main-block">
-
+    <CitySearch />
   </div>
 </template>
 

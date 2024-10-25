@@ -56,8 +56,8 @@ export function initGeoApi() {
   const geoApi = axios.create({
     baseURL: `https://${GEO_ROOT}/v1/geo/`,
     headers: {
-      "Accept-Language": locale.value,
-      "x-rapidapi-key": import.meta.env.GEO_KEY,
+      "x-rapidapi-key": "8b58007bc2msh850fe94f3deb69ep1fb800jsnae50500d7bda",
+      "x-rapidapi-host": "wft-geo-db.p.rapidapi.com",
     },
     params: {
       languageCode: locale.value,
