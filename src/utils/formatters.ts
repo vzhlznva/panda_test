@@ -36,3 +36,10 @@ export function formatDateByTimeZone(tz: string) {
     return moment(new Date()).tz(tz).format("DD MMM[,] YYYY");
   }
 }
+
+export function formatUnixTime(time: number, tz: number) {
+  return moment
+    .unix(time)
+    .utcOffset(tz / 60)
+    .format("HH:mm");
+}
