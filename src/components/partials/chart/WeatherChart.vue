@@ -6,6 +6,7 @@ import { WeatherService } from '/@src/services/weather';
 import { WeatherChartItem, WeatherForecast } from '/@src/types/weather';
 import { ChartData, ChartOptions } from 'chart.js';
 import { formatTime } from '/@src/utils/formatters';
+import moment, { max } from 'moment';
 
 
 const props = defineProps<
@@ -29,6 +30,17 @@ const chartData = ref<ChartData<'line'>>({
       borderJoinStyle: 'round',
       tension: 0.3,
       fill: false,
+      data: [],
+    },
+    {
+      label: '',
+      borderColor: "rgba(128, 205, 246, 1)",
+      backgroundColor: "rgba(128, 205, 246, 0.2)",
+      borderWidth: 2,
+      borderJoinStyle: 'round',
+      tension: 0.3,
+      fill: false,
+      hidden: true,
       data: [],
     }
   ]
@@ -56,11 +68,40 @@ const service = new WeatherService()
 const convertChartData = () => {
   chartData.value.labels = [];
   chartData.value.datasets[0].data = []
+  chartData.value.datasets[1].data = []
+  chartData.value.datasets[1].hidden = true
 
-  forecast.value?.list.forEach((item: WeatherChartItem) => {
-    chartData.value?.labels?.push(formatTime(item.dt_txt))
-    chartData.value?.datasets[0].data.push(Math.round(item.main.temp_max))
-  })
+  if (selectedDays.value == 1) {
+    forecast.value?.list.forEach((item: WeatherChartItem) => {
+      chartData.value?.labels?.push(formatTime(item.dt_txt))
+      chartData.value?.datasets[0].data.push(Math.round(item.main.temp))
+    })
+  } else {
+    const groupedData: { [key: string]: WeatherChartItem[] } = {}
+    forecast.value?.list.forEach((item: WeatherChartItem) => {
+      const day = moment(item.dt_txt).startOf('day').format('YYYY-MM-DD');
+      if (!groupedData[day]) {
+        groupedData[day] = []
+      }
+      groupedData[day].push(item)
+    })
+    const today = moment().startOf('day')
+
+    Object.keys(groupedData).forEach((day: string, index) => {
+      const dayData = groupedData[day];
+      const dayMoment = moment(day);
+      console.log(day)
+
+      chartData.value.labels?.push(index === 0 ? 'Today' : index === 1 ? 'Tomorrow' : dayMoment.format('dddd'))
+      const maxTemp = Math.max(...dayData.map((item: WeatherChartItem) => item.main.temp_max))
+      const minTemp = Math.min(...dayData.map((item: WeatherChartItem) => item.main.temp_min))
+
+      chartData.value.datasets[0].data.push(Math.round(maxTemp));
+      chartData.value.datasets[1].data.push(Math.round(minTemp));
+      chartData.value.datasets[1].hidden = false
+    })
+  }
+
   isChartDataReady.value = true
 }
 

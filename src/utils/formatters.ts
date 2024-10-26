@@ -25,6 +25,12 @@ export function formatDateTime(value: string | Date) {
   }
 }
 
+export function formatDay(value: string | Date) {
+  if (value) {
+    return moment(new Date(value)).format("dddd");
+  }
+}
+
 export function formatDayByTimeZone(tz: string) {
   if (tz) {
     return moment(new Date()).tz(tz).format("dddd");
