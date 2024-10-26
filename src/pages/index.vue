@@ -3,11 +3,12 @@ import { onBeforeMount, onMounted, ref } from 'vue';
 import { GeoService } from '../services/geo';
 import { LocationItem } from '../types/geo';
 import { WeatherService } from '/@src/services/weather';
-import { CurrentWeather } from '/@src/types/weather';
+import { Weather, WeatherForecast } from '/@src/types/weather';
 
 
-const currLoc = ref<LocationItem>({} as LocationItem)
-const currWeather = ref<CurrentWeather>()
+const currLoc = ref<LocationItem | null>(null)
+const currWeather = ref<Weather | null>(null)
+const forecast = ref<WeatherForecast | undefined>(undefined)
 
 const weatherService = new WeatherService()
 const service = new GeoService();
@@ -17,6 +18,7 @@ onBeforeMount(async () => {
   try {
     currLoc.value = await service.getCurrentLocation()
     currWeather.value = await weatherService.getWeather(currLoc.value.latitude, currLoc.value.longitude)
+
   } catch (error: any) {
     console.error(error)
   }
@@ -33,6 +35,13 @@ onBeforeMount(async () => {
     <div class="main-block__locations">
       <LocationCard :city="currLoc" :weather="currWeather" v-if="currLoc && currWeather" />
     </div>
+    <div class="main-block__info">
+      <div class="main-block__chart">
+        <WeatherChart v-if="currLoc" :city="currLoc" />
+      </div>
+      <Hightights :weather="currWeather" v-if="currWeather" />
+    </div>
+
   </div>
 </template>
 
@@ -49,6 +58,21 @@ onBeforeMount(async () => {
     align-items: center;
     width: 100%;
 
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__chart {
+    background-color: var(--black-800);
+    border-radius: 24px;
+    padding: 24px;
+    width: 100%;
   }
 }
 </style>
