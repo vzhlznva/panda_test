@@ -9,6 +9,8 @@ import {
 
 import { createI18n } from "./i18n";
 import { RouterView } from "vue-router";
+import { createPinia } from "pinia";
+
 import { createRouter } from "./router";
 import {
   initApi,
@@ -24,6 +26,7 @@ async function createApp() {
   const storage = initStorage();
   const api = initApi();
   const geoApi = initGeoApi();
+  const pinia = createPinia();
 
   const app = createClientApp({
     setup() {
@@ -60,6 +63,7 @@ async function createApp() {
 
   app.use(router);
   app.use(i18n);
+  app.use(pinia);
 
   return app;
 }
