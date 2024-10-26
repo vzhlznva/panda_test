@@ -32,17 +32,21 @@ onMounted(() => {
   }
 });
 
-watch(() => props.chartData, (newData) => {
-  if (chartInstance.value) {
-    chartInstance.value.data = newData;
-    chartInstance.value?.update();
+watch(() => props.chartData, (newData, oldData) => {
+  if (newData !== oldData) {
+    if (chartInstance.value) {
+      chartInstance.value.data = newData;
+      chartInstance.value.update();
+    }
   }
 });
 
-watch(() => props.chartOptions, (newOptions) => {
-  if (chartInstance.value && newOptions) {
-    chartInstance.value.options = newOptions;
-    chartInstance.value.update();
+watch(() => props.chartOptions, (newOptions, oldOptions) => {
+  if (newOptions !== oldOptions) {
+    if (chartInstance.value && newOptions) {
+      chartInstance.value.options = newOptions;
+      chartInstance.value.update();
+    }
   }
 });
 </script>

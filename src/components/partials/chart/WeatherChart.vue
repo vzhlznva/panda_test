@@ -17,6 +17,7 @@ const props = defineProps<
 const daysForecast = ref<number[]>([1, 5])
 const selectedDays = ref<number>(daysForecast.value[0])
 const forecast = ref<WeatherForecast | null>(null)
+const isChartDataReady = ref<boolean>(false)
 const chartData = ref<ChartData<'line'>>({
   labels: [],
   datasets: [
@@ -38,28 +39,33 @@ const chartOptions = ref<ChartOptions<'line'>>({
     legend: {
       display: false
     },
-    tooltip: {
-      callbacks: {
-        label: (tooltipItem) => {
-          const xValue = tooltipItem.label
-          const yValue = tooltipItem.formattedValue
-          return `${xValue}\n${yValue}\u00B0C`
-        }
-      }
-    }
+    // tooltip: {
+    //   callbacks: {
+    //     label: (tooltipItem) => {
+    //       const xValue = tooltipItem.label
+    //       const yValue = tooltipItem.formattedValue
+    //       return `${xValue}\n${yValue}\u00B0C`
+    //     }
+    //   }
+    // }
   }
 })
 
 const service = new WeatherService()
 
 const convertChartData = () => {
+  chartData.value.labels = [];
+  chartData.value.datasets[0].data = []
+
   forecast.value?.list.forEach((item: WeatherChartItem) => {
     chartData.value?.labels?.push(formatTime(item.dt_txt))
     chartData.value?.datasets[0].data.push(Math.round(item.main.temp_max))
   })
+  isChartDataReady.value = true
 }
 
 const fetchForecast = async () => {
+  isChartDataReady.value = false
   try {
     forecast.value = await service.getForecast(props.city.latitude, props.city.longitude, selectedDays.value)
   } catch (error: any) {
@@ -89,7 +95,7 @@ onMounted(async () => {
         {{ i }} {{ i == 1 ? 'Day' : 'Days' }}
       </button>
     </div>
-    <BaseChart :chartData="chartData" :chartOptions="chartOptions" v-if="forecast" />
+    <BaseChart :chartData="chartData" :chartOptions="chartOptions" v-if="isChartDataReady && chartData" />
   </div>
 </template>
 
