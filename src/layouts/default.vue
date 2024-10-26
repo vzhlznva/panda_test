@@ -22,7 +22,7 @@ main {
   flex-direction: row;
   justify-content: center;
   gap: 24px;
-  padding: 40px 0;
+  padding: 0 0 40px;
   margin: 0 auto;
 }
 </style>

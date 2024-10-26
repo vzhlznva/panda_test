@@ -50,14 +50,25 @@ onBeforeMount(async () => {
   display: flex;
   flex-direction: column;
   gap: 24px;
+  position: relative;
+  width: 100%;
+  padding: 97px 0 0;
 
   &__head {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
     width: 100%;
+    max-width: 1092px;
+    position: fixed;
+    top: 0;
+    height: 97px;
+    background-color: var(--black2-800);
 
+    h1 {
+      margin: 0 0 10px 0;
+    }
   }
 
   &__info {

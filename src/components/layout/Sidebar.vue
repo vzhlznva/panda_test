@@ -31,11 +31,15 @@ const isSidebarActive = ref<boolean>(false)
   min-width: 84px;
   background-color: var(--black-800);
   border-radius: 32px;
+  position: sticky;
+  top: 40px;
   display: flex;
   flex-direction: column;
   padding: 48px 0 0;
   align-items: center;
   transition: min-width 0.25s ease;
+  height: calc(100vh - 80px);
+
 
   &.active {
     min-width: 200px;
