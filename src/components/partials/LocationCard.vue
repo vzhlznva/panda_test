@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { LocationItem } from '/@src/types/geo';
-import { CurrentWeather } from '/@src/types/weather';
+import { Weather } from '/@src/types/weather';
 import { formatDateByTimeZone, formatDayByTimeZone } from '/@src/utils/formatters';
 
 
 const props = defineProps<
   {
     city: LocationItem;
-    weather: CurrentWeather;
+    weather: Weather;
   }
 >()
 
@@ -23,6 +23,7 @@ onMounted(() => console.log(props.weather))
         <IWeatherLocation />
         <p>{{ city.city }}, {{ city.country }}</p>
       </div>
+      <IWeatherHeart class="card-header__fav" />
     </div>
     <div class="card-body">
       <div class="card-body__left">
@@ -45,7 +46,7 @@ onMounted(() => console.log(props.weather))
 .card {
   background-color: var(--black-800);
   border-radius: 24px;
-  padding: 24px;
+  padding: 16px;
   width: 19%;
   display: flex;
   flex-direction: column;
@@ -55,15 +56,28 @@ onMounted(() => console.log(props.weather))
   &-header {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 0 10px 0;
 
     &__loc {
       display: flex;
       flex-direction: row;
       align-items: center;
-      gap: 8px;
-      padding: 8px 16px;
+      gap: 5px;
+      padding: 5px 10px;
       background-color: var(--black-500);
-      border-radius: 16px;
+      border-radius: 10px;
+
+      p {
+        font-size: var(--small);
+      }
+    }
+
+    &__fav {
+      height: 24px;
+      width: 24px;
+      cursor: pointer;
     }
   }
 
@@ -78,7 +92,7 @@ onMounted(() => console.log(props.weather))
       gap: 4px;
 
       .day {
-        font-size: var(--h2);
+        font-size: var(--h3);
       }
 
       p {
@@ -86,7 +100,8 @@ onMounted(() => console.log(props.weather))
       }
 
       h1 {
-        margin: 6px 0 0 0;
+        margin: auto 0 0 0;
+        font-size: var(--h2);
       }
     }
 

@@ -3,7 +3,7 @@ import APIExceptionCatchAll from "/@src/utils/decorators";
 import { useApi } from "../composable/useApi";
 import { City, LocationItem } from "../types/geo";
 import { locale } from "../i18n";
-import { CurrentWeather } from "../types/weather";
+import { Weather, WeatherForecast } from "../types/weather";
 
 const API_KEY = import.meta.env.API_KEY;
 
@@ -29,9 +29,26 @@ export class WeatherService {
   public async getWeather(
     lat: string | number,
     lon: string | number
-  ): Promise<CurrentWeather> {
+  ): Promise<Weather> {
     const { data } = await this._api.get("weather", {
       params: { lat, lon, APPID: "a86c06a87e2c2a38e2a4585b2a93e61c" },
+    });
+
+    return data;
+  }
+
+  public async getForecast(
+    lat: string | number,
+    lon: string | number,
+    days: number
+  ): Promise<WeatherForecast> {
+    const { data } = await this._api.get("forecast", {
+      params: {
+        lat,
+        lon,
+        APPID: "a86c06a87e2c2a38e2a4585b2a93e61c",
+        cnt: days * 8,
+      },
     });
 
     return data;

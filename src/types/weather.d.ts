@@ -1,31 +1,37 @@
-export interface CurrentWeather {
+export interface MainWeather {
+  temp: number;
+  feels_like: number;
+  pressure: number;
+  humidity: number;
+  temp_min: number;
+  temp_max: number;
+  sea_level: number;
+  grnd_level: number;
+}
+
+export interface WeatherState {
+  id: number;
+  main: string;
+  description: string;
+  icon: string;
+}
+
+export interface Wind {
+  speed: number;
+  deg: number;
+  gust: number;
+}
+
+export interface Weather {
   coord: {
     lon: number;
     lat: number;
   };
-  weather: {
-    id: number;
-    main: string;
-    description: string;
-    icon: string;
-  }[];
+  weather: WeatherState[];
   base: string;
-  main: {
-    temp: number;
-    feels_like: number;
-    pressure: number;
-    humidity: number;
-    temp_min: number;
-    temp_max: number;
-    sea_level: number;
-    grnd_level: number;
-  };
+  main: MainWeather;
   visibility: number;
-  wind: {
-    speed: number;
-    deg: number;
-    gust: number;
-  };
+  wind: Wind;
   clouds: {
     all: number;
   };
@@ -40,4 +46,42 @@ export interface CurrentWeather {
   id: number;
   name: string;
   cod: number;
+  sys: {
+    sunrise: number;
+    sunset: number;
+  };
+}
+
+export interface WeatherChartItem {
+  dt: number;
+  main: MainWeather;
+  weather: WeatherState;
+  clouds: {
+    all: number;
+  };
+  wind: Wind;
+  rain: {
+    [key: `${number}h`]: number;
+  };
+  snow: {
+    [key: `${number}h`]: number;
+  };
+  pop: number;
+  visibility: number;
+  sys: {
+    pod: string;
+  };
+  dt_txt: string;
+}
+
+export interface WeatherForecast {
+  cod: string;
+  message: number;
+  cnt: number;
+  list: WeatherChartItem[];
+  city: {
+    sunrise: number;
+    sunset: number;
+    timezone: number;
+  };
 }
