@@ -6,7 +6,7 @@ import { LocationBlock, LocationItem } from '/@src/types/geo';
 const props = defineProps<
   {
     index?: number;
-    block: LocationBlock,
+    block: LocationItem,
     favOnly: boolean
   }
 >()
@@ -15,7 +15,8 @@ const modal = ref<Modal | null>(null)
 const storage = useBlocksStorage()
 
 const handleRemove = () => {
-  storage.removeFavorite(props.block.location as LocationItem, props.index, props.favOnly);
+  console.log(props.block)
+  storage.removeFavorite(props.block as LocationItem, props.index, props.favOnly);
   modal.value?.close()
 }
 

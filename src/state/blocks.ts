@@ -32,17 +32,18 @@ export const useBlocksStorage = defineStore("data", () => {
     currentIndex.value = i;
   };
 
-  const addFavorite = (block: LocationBlock, i: number) => {
+  const addFavorite = (block: LocationItem, i?: number) => {
     if (
       !favorites.value.find(
         (fav: LocationItem) =>
-          fav.longitude == block.location?.longitude &&
-          fav.latitude == block.location?.latitude &&
-          fav.city == block.location?.city
+          fav.longitude == block.longitude &&
+          fav.latitude == block.latitude &&
+          fav.city == block.city
       )
     ) {
-      favorites.value.push(block.location as LocationItem);
-      blocks.value[i].fav = true;
+      favorites.value.push(block);
+      console.log(i);
+      if (i !== undefined) blocks.value[i].fav = true;
     }
   };
 
@@ -51,6 +52,7 @@ export const useBlocksStorage = defineStore("data", () => {
     i?: number,
     favOnly: boolean = false
   ) => {
+    console.log(block);
     const index = favorites.value.findIndex(
       (fav: LocationItem) =>
         fav.latitude == block.latitude &&

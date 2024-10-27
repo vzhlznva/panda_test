@@ -155,7 +155,7 @@ onMounted(async () => {
         margin: 2px 0 0 0;
 
         p {
-          font-size: var(--p);
+          font-size: var(--small);
           margin: 4px 0 0 0;
         }
       }

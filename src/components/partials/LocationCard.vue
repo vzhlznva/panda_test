@@ -28,7 +28,7 @@ const handleFavorite = (loc: LocationBlock, i: number) => {
     if (blocksStorage.favorites.length == 5) {
       limitModal.value.open()
     }
-    blocksStorage.addFavorite(loc as LocationBlock, i)
+    blocksStorage.addFavorite(loc.location as LocationItem, i)
   } else {
     favModal.value.open()
   }
@@ -77,7 +77,7 @@ watch(() => props.isCurrent, async () => {
       Please, select city
     </div>
     <DeleteModal ref="modal" :index="index" />
-    <RemoveFav ref="favModal" :index="index" :block="location" :favOnly="false" />
+    <RemoveFav ref="favModal" :index="index" :block="location?.location" :favOnly="false" />
     <ReachedLimit ref="limitModal" />
   </div>
 </template>

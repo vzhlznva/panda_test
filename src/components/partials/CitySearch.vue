@@ -1,18 +1,22 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import { GeoService } from '/@src/services/geo';
 import { City } from '/@src/types/geo';
 import { useBlocksStorage } from '/@src/state/blocks';
 import { WeatherService } from '/@src/services/weather';
+import { useRoute } from 'vue-router';
 
 
 const cities = ref<City[]>([] as City[])
 const prefix = ref<string | null>(null);
 const isResultsActive = ref<boolean>(false);
 const search = ref<HTMLDivElement | null>(null);
+const limitModal = ref()
+const mode = computed<'general' | 'favorites'>(() => route.name === 'favourites' ? 'favorites' : 'general')
 
 const blocksStorage = useBlocksStorage()
+const route = useRoute()
 
 const service = new GeoService();
 const weatherService = new WeatherService()
@@ -22,24 +26,40 @@ const handleResultsActive = () => {
 }
 
 const handleSelectCity = async (city: City) => {
-  try {
-    const data = await weatherService.getWeather(city.latitude, city.longitude)
-    blocksStorage.setCurrentCity({
-      location: {
+  if (mode.value === 'general') {
+    try {
+      const data = await weatherService.getWeather(city.latitude, city.longitude)
+      blocksStorage.setCurrentCity({
+        location: {
+          city: city.name,
+          country: city.country,
+          longitude: city.longitude,
+          latitude: city.latitude,
+          timezone: city.timezone,
+          country_code: city.countryCode
+        },
+        weather: data
+      })
+      console.log(blocksStorage.currentBlock, blocksStorage.blocks)
+    } catch (error: any) {
+      console.error(error)
+    }
+  } else {
+    if (blocksStorage.favorites.length == 5) {
+      limitModal.value.open()
+    } else {
+      blocksStorage.addFavorite({
         city: city.name,
         country: city.country,
         longitude: city.longitude,
         latitude: city.latitude,
         timezone: city.timezone,
         country_code: city.countryCode
-      },
-      weather: data
-    })
-    console.log(blocksStorage.currentBlock, blocksStorage.blocks)
-  } catch (error: any) {
-    console.error(error)
+      })
+    }
   }
 
+  prefix.value = ''
   isResultsActive.value = false
 }
 
@@ -55,6 +75,8 @@ const fetchCities = async () => {
 onClickOutside(search, () => {
   isResultsActive.value = false
 })
+
+onMounted(() => console.log(mode.value))
 </script>
 
 <template>
@@ -73,6 +95,7 @@ onClickOutside(search, () => {
         </div>
       </div>
     </div>
+    <ReachedLimit ref="limitModal" />
   </div>
 </template>
 
@@ -80,7 +103,6 @@ onClickOutside(search, () => {
 @use "/@src/styles/abstracts/mixins";
 
 .search {
-  max-width: 353px;
   position: relative;
 
   &-wrapper {
