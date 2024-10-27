@@ -40,7 +40,6 @@ const handleSelectCity = async (city: City) => {
         },
         weather: data
       })
-      console.log(blocksStorage.currentBlock, blocksStorage.blocks)
     } catch (error: any) {
       console.error(error)
     }
@@ -75,8 +74,6 @@ const fetchCities = async () => {
 onClickOutside(search, () => {
   isResultsActive.value = false
 })
-
-onMounted(() => console.log(mode.value))
 </script>
 
 <template>

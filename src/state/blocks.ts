@@ -42,7 +42,6 @@ export const useBlocksStorage = defineStore("data", () => {
       )
     ) {
       favorites.value.push(block);
-      console.log(i);
       if (i !== undefined) blocks.value[i].fav = true;
     }
   };
@@ -52,7 +51,6 @@ export const useBlocksStorage = defineStore("data", () => {
     i?: number,
     favOnly: boolean = false
   ) => {
-    console.log(block);
     const index = favorites.value.findIndex(
       (fav: LocationItem) =>
         fav.latitude == block.latitude &&

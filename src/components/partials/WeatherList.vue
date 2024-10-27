@@ -48,8 +48,6 @@ const convertForecast = () => {
       const maxTemp = Math.max(...dayData.map((item: WeatherChartItem) => item.main.temp_max))
       const minTemp = Math.min(...dayData.map((item: WeatherChartItem) => item.main.temp_min))
       const weath = mode(dayData.map((item: WeatherChartItem) => item.weather[0]))
-      console.log(weath)
-
 
       forecastInfo.value.push({
         day: dayy,
@@ -62,9 +60,7 @@ const convertForecast = () => {
 }
 
 onMounted(() => {
-  console.log('onMounted', props.forecast)
   convertForecast()
-  console.log(forecastInfo.value)
 })
 
 watch(() => props.days, () => {

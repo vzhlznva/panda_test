@@ -15,7 +15,6 @@ const modal = ref<Modal | null>(null)
 const storage = useBlocksStorage()
 
 const handleRemove = () => {
-  console.log(props.block)
   storage.removeFavorite(props.block as LocationItem, props.index, props.favOnly);
   modal.value?.close()
 }
