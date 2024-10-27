@@ -11,7 +11,8 @@ const props = defineProps<
     location: LocationBlock | null;
     isEmpty: boolean,
     isCurrent: boolean,
-    index: number
+    index: number,
+    loading: boolean
   }
 >()
 
@@ -48,7 +49,7 @@ watch(() => props.isCurrent, async () => {
 
 <template>
   <div class="card" :class="{ 'current': isCurrent }">
-    <div class="card-header" :class="{ 'empty': isEmpty }">
+    <div class="card-header" :class="{ 'empty': isEmpty }" v-if="!loading">
       <div class="card-header__loc" v-if="!isEmpty">
         <p>{{ location?.location?.city }}, {{ location?.location?.country_code }}</p>
       </div>
@@ -59,7 +60,7 @@ watch(() => props.isCurrent, async () => {
       </div>
 
     </div>
-    <div class="card-body" v-if="!isEmpty">
+    <div class="card-body" v-if="!isEmpty && !loading">
       <div class="card-body__left">
         <p class="day">{{ formatUnixDay(location?.weather?.dt as number, location?.weather?.timezone as number) }}</p>
         <p>{{ formatUnixTime(location?.weather?.dt as number, location?.weather?.timezone as number) }}</p>
@@ -73,11 +74,12 @@ watch(() => props.isCurrent, async () => {
         </div>
       </div>
     </div>
-    <div class="card-empty" v-else>
+    <div class="card-empty" v-else-if="!loading">
       Please, select city
     </div>
+    <Loader v-if="loading" />
     <DeleteModal ref="modal" :index="index" />
-    <RemoveFav ref="favModal" :index="index" :block="location?.location" :favOnly="false" />
+    <RemoveFav ref="favModal" :index="index" :block="location?.location" v-if="!isEmpty" :favOnly="false" />
     <ReachedLimit ref="limitModal" />
   </div>
 </template>

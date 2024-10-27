@@ -9,7 +9,7 @@ import { useBlocksStorage } from '../state/blocks';
 
 const currLoc = ref<LocationItem | null>(null)
 const currWeather = ref<Weather | null>(null)
-const forecast = ref<WeatherForecast | undefined>(undefined)
+const isLoading = ref<boolean>(false)
 
 const blocksStorage = useBlocksStorage()
 
@@ -18,6 +18,7 @@ const service = new GeoService();
 
 onBeforeMount(async () => {
   if (blocksStorage.blocks.length == 0) {
+    isLoading.value = true
     try {
       currLoc.value = await service.getCurrentLocation()
       currWeather.value = await weatherService.getWeather(currLoc.value.latitude, currLoc.value.longitude)
@@ -25,6 +26,8 @@ onBeforeMount(async () => {
       blocksStorage.selectBlock(0)
     } catch (error: any) {
       console.error(error)
+    } finally {
+      isLoading.value = false
     }
   }
 })
@@ -32,14 +35,11 @@ onBeforeMount(async () => {
 
 <template>
   <div class="main-block">
-    <div class="main-block__head">
-      <h1>WEATHER APP</h1>
-      <CitySearch />
-    </div>
+    <Header />
     <div class="main-block__locations">
       <LocationCard :location="block" :isCurrent="blocksStorage.currentIndex == i"
         :isEmpty="block.location == null && block.weather == null" :index="i" v-for="block, i in blocksStorage.blocks"
-        @click="blocksStorage.selectBlock(i)" />
+        @click="blocksStorage.selectBlock(i)" :loading="isLoading" />
       <button class="main-block__locations-add" @click="blocksStorage.addBlock({ location: null, weather: null })"
         v-if="blocksStorage.blocks.length < 5">
         +
@@ -62,25 +62,6 @@ onBeforeMount(async () => {
   gap: 24px;
   position: relative;
   width: 100%;
-  padding: 121px 0 0;
-
-  &__head {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-end;
-    width: 100%;
-    max-width: 1092px;
-    position: fixed;
-    top: 0;
-    height: 97px;
-    background-color: var(--black2-800);
-    z-index: 99999999;
-
-    h1 {
-      margin: 0 0 10px 0;
-    }
-  }
 
   &__locations {
     display: flex;
@@ -88,6 +69,7 @@ onBeforeMount(async () => {
     gap: 16px;
     align-items: center;
     width: 100%;
+    padding: 0 0 0 2px;
 
     &-add {
       height: 50%;

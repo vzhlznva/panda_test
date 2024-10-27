@@ -42,7 +42,7 @@ const isSidebarActive = ref<boolean>(false)
 
 
   &.active {
-    min-width: 200px;
+    min-width: 180px;
     width: fit-content;
 
     .sidebar-menu__item {

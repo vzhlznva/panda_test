@@ -52,8 +52,8 @@ watch(() => props.chartOptions, (newOptions, oldOptions) => {
 </script>
 
 <template>
-  <div class="canvas-container" style="position: relative; height:100%; width:100%; z-index: 1">
-    <canvas ref="canvasRef" style="position: relative; z-index: 0"></canvas>
+  <div class="canvas-container" style="position: relative; width:100%; z-index: 1">
+    <canvas ref="canvasRef" style="position: relative; z-index: 0; width:100%; "></canvas>
   </div>
 </template>
 

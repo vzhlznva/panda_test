@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { LocationBlock, LocationItem } from '/@src/types/geo';
 import { WeatherService } from '/@src/services/weather';
 
@@ -20,6 +20,8 @@ const daysForecast = ref<number[]>([1, 5])
 const selectedDays = ref<number>(daysForecast.value[0])
 const forecast = ref<WeatherForecast | null>(null)
 const isChartDataReady = ref<boolean>(false)
+const isLoading = ref<boolean>(false)
+const isEmpty = computed<boolean>(() => props.city == null)
 const chartData = ref<ChartData<'line'>>({
   labels: [],
   datasets: [
@@ -98,13 +100,18 @@ const convertChartData = () => {
 
 const fetchForecast = async () => {
   isChartDataReady.value = false
-  try {
-    forecast.value = await service.getForecast(props.city.latitude as number, props.city.longitude as number, selectedDays.value)
-  } catch (error: any) {
-    console.error(error)
-  } finally {
-    convertChartData()
-  }
+  isLoading.value = true
+  if (!isEmpty.value) {
+    try {
+      forecast.value = await service.getForecast(props.city.latitude as number, props.city.longitude as number, selectedDays.value)
+    } catch (error: any) {
+      console.error(error)
+    } finally {
+      convertChartData()
+      isLoading.value = false
+    }
+  } else isLoading.value = false
+
 }
 
 const handleChangeDays = async (i: number) => {
@@ -129,8 +136,11 @@ watch(() => props.city, async () => {
         {{ i }} {{ i == 1 ? 'Day' : 'Days' }}
       </button>
     </div>
-    <WeatherList :forecast="forecast" :days="selectedDays" v-if="forecast" />
-    <BaseChart :chartData="chartData" :chartOptions="chartOptions" v-if="isChartDataReady && chartData" />
+    <WeatherList :forecast="forecast" :days="selectedDays" v-if="forecast && !isLoading && !isEmpty" />
+    <BaseChart :chartData="chartData" :chartOptions="chartOptions"
+      v-if="isChartDataReady && chartData && !isLoading && !isEmpty" />
+    <h1 v-if="isEmpty && !isLoading">No data, please select city</h1>
+    <Loader height="90%" v-if="isLoading" />
   </div>
 </template>
 
@@ -138,6 +148,11 @@ watch(() => props.city, async () => {
 .chart-wrapper {
   width: 100%;
   height: 100%;
+
+  h1 {
+    text-align: center;
+    margin: auto 0;
+  }
 
   &__controls {
     display: flex;
