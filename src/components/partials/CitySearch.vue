@@ -80,7 +80,7 @@ onClickOutside(search, () => {
   <div class="search" ref="search">
     <div class="search-wrapper" :class="{ active: isResultsActive }">
       <IWeatherSearch class="search-icon" />
-      <input class="search-input" type="text" name="city" id="city" placeholder="Search your city" v-model="prefix"
+      <input class="search-input" type="text" name="city" id="city" :placeholder="$t('header.search')" v-model="prefix"
         @input="fetchCities" @focus="handleResultsActive">
     </div>
     <div class="search-results" :class="{ active: isResultsActive }">

@@ -13,15 +13,15 @@ const props = defineProps<
 
 <template>
   <div class="highlights">
-    <h2>Today's Highlight</h2>
+    <h2>{{ $t('weather.high') }}</h2>
     <div class="highlights-body">
       <div class="highlights-body__item small" v-if="block.weather">
         <div class="head">
           <IWeatherWind />
-          Wind
+          {{ $t('weather.wind') }}
         </div>
         <div class="data">
-          <span>{{ block.weather?.wind.speed }}</span> m/s
+          <span>{{ block.weather?.wind.speed }}</span> {{ $t('weather.ms') }}
         </div>
         <div class="time" v-if="block.weather">
           {{ formatUnixTime(block.weather?.dt, block.weather?.timezone) }}
@@ -30,7 +30,7 @@ const props = defineProps<
       <div class="highlights-body__item small" v-if="block.weather">
         <div class="head">
           <IWeatherHumidity />
-          Humidity
+          {{ $t('weather.humidity') }}
         </div>
         <div class="data">
           <span>{{ block.weather?.main.humidity }}</span> %
@@ -42,10 +42,10 @@ const props = defineProps<
       <div class="highlights-body__item small" v-if="block.weather">
         <div class="head">
           <IWeatherVisibility />
-          Visibility
+          {{ $t('weather.visibility') }}
         </div>
         <div class="data" v-if="block.weather">
-          <span>{{ Math.round(block.weather?.visibility / 1000) }}</span> km
+          <span>{{ Math.round(block.weather?.visibility / 1000) }}</span> {{ $t('weather.km') }}
         </div>
         <div class="time" v-if="block.weather">
           {{ formatUnixTime(block.weather?.dt, block.weather?.timezone) }}
@@ -56,7 +56,7 @@ const props = defineProps<
           <img src="/~/images/weather/sunrise.png" alt="sunrise">
         </div>
         <div class="title">
-          Sunrise
+          {{ $t('weather.sunrise') }}
         </div>
         <div class="time" v-if="block.weather">
           {{ formatUnixTime(block.weather?.sys.sunrise, block.weather?.timezone) }}
@@ -67,7 +67,7 @@ const props = defineProps<
           <img src="/~/images/weather/sunset.png" alt="sunrise">
         </div>
         <div class="title">
-          Sunset
+          {{ $t('weather.sunset') }}
         </div>
         <div class="time" v-if="block.weather">
           {{ formatUnixTime(block.weather?.sys.sunset, block.weather?.timezone) }}

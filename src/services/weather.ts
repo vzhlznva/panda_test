@@ -31,7 +31,12 @@ export class WeatherService {
     lon: string | number
   ): Promise<Weather> {
     const { data } = await this._api.get("weather", {
-      params: { lat, lon, APPID: "a86c06a87e2c2a38e2a4585b2a93e61c" },
+      params: {
+        lat,
+        lon,
+        APPID: "a86c06a87e2c2a38e2a4585b2a93e61c",
+        lang: locale.value,
+      },
     });
 
     return data;
@@ -48,6 +53,7 @@ export class WeatherService {
         lon,
         APPID: "a86c06a87e2c2a38e2a4585b2a93e61c",
         cnt: days * 8,
+        lang: locale.value,
       },
     });
 

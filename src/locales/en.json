@@ -1,0 +1,43 @@
+{
+  "menu": {
+    "dashboard": "Dashboard",
+    "favor": "Favorites"
+  },
+  "header": {
+    "search": "Search your city"
+  },
+  "weather": {
+    "feels": "Feels like",
+    "day": "Day",
+    "days": "Days",
+    "high": "Today's Highlights",
+    "wind": "Wind",
+    "humidity": "Humidity",
+    "visibility": "Visibility",
+    "sunrise": "Sunrise",
+    "sunset": "Sunset",
+    "ms": "m/s",
+    "km": "km",
+    "night": "Night"
+  },
+  "limit": {
+    "title": "Reached favorites limit!",
+    "text": "You have reached the limit of 5 favorites. Please, delete one location and try again."
+  },
+  "delete": {
+    "title": "Delete location?",
+    "text": "Are you sure you want to delete location?",
+    "title-fav": "Delete favorites location?",
+    "text-fav": "Are you sure you want to remove from favorites?",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "no-city": {
+    "select": "Please, select city.",
+    "no-data": "No data, please select city."
+  },
+  "days": {
+    "today": "Today",
+    "tomorrow": "Tomorrow"
+  }
+}

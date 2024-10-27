@@ -27,7 +27,6 @@ export class GeoService {
     const { data } = await this._api.get("cities", {
       params: {
         namePrefix: prefix,
-        languageCode: locale.value,
         limit: 10,
       },
     });

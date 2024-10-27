@@ -14,10 +14,10 @@ defineExpose({
 <template>
   <Modal ref="modal">
     <template #title>
-      Reached favorites limit
+      {{ $t('limit.title') }}
     </template>
     <div class="delete-body">
-      <h2>You have reached the limit of 5 favorites. Please, delete one location and try again</h2>
+      <h2>{{ $t('limit.text') }}</h2>
     </div>
   </Modal>
 </template>

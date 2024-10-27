@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { LocationItem } from '/@src/types/geo';
 import { WeatherService } from '/@src/services/weather';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { Weather } from '/@src/types/weather';
 import { formatUnixDay, formatUnixTime } from '/@src/utils/formatters';
 import { useBlocksStorage } from '/@src/state/blocks';
+import { locale } from '/@src/i18n';
 
 const props = defineProps<
   {
@@ -28,6 +29,15 @@ onMounted(async () => {
   }
 })
 
+watch(() => locale.value, async () => {
+  if (props.location) {
+    try {
+      currWeather.value = await service.getWeather(props.location.latitude, props.location.longitude);
+    } catch (error: any) {
+      console.error(error)
+    }
+  }
+})
 </script>
 
 <template>
@@ -49,8 +59,8 @@ onMounted(async () => {
         <div class="favorite-body__right">
           <img :src="`/~/images/weather/${currWeather?.weather[0].icon}.png`" alt="" v-if="currWeather">
           <div class="favorite-body__right-temp" v-if="currWeather">
-            <h2>{{ currWeather.weather[0].main }}</h2>
-            <p>Feels like {{ Math.round(currWeather.main.feels_like) }}&deg;C</p>
+            <h2>{{ currWeather.weather[0].description }}</h2>
+            <p>{{ $t('weather.feels') }} {{ Math.round(currWeather.main.feels_like) }}&deg;C</p>
           </div>
         </div>
       </div>
@@ -127,6 +137,7 @@ onMounted(async () => {
 
       .day {
         font-size: var(--h2);
+        text-transform: capitalize;
       }
 
       p {
@@ -150,9 +161,15 @@ onMounted(async () => {
         max-width: 64px;
       }
 
+      h2 {
+        text-transform: capitalize;
+        font-size: var(--h3);
+      }
+
       &-temp {
         text-align: right;
         margin: 2px 0 0 0;
+        max-width: 100px;
 
         p {
           font-size: var(--small);

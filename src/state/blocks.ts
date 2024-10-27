@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { LocationBlock, LocationItem } from "../types/geo";
 import { useLocalStorage } from "@vueuse/core";
 import useNotyf from "../composable/useNotyf";
+import { Weather } from "../types/weather";
 
 export const useBlocksStorage = defineStore("data", () => {
   const blocks = ref<LocationBlock[]>([]);
@@ -91,6 +92,10 @@ export const useBlocksStorage = defineStore("data", () => {
     }
   };
 
+  const replaceWeather = (weather: Weather, i: number) => {
+    blocks.value[i].weather = weather;
+  };
+
   return {
     addBlock,
     selectBlock,
@@ -98,6 +103,7 @@ export const useBlocksStorage = defineStore("data", () => {
     deleteBlock,
     addFavorite,
     removeFavorite,
+    replaceWeather,
     blocks,
     currentBlock,
     currentIndex,

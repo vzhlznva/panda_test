@@ -2,11 +2,14 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { LocationBlock, LocationItem } from '/@src/types/geo';
 import { WeatherService } from '/@src/services/weather';
+import { useI18n } from 'vue-i18n';
+import moment from 'moment';
 
 import { WeatherChartItem, WeatherForecast } from '/@src/types/weather';
 import { ChartData, ChartOptions } from 'chart.js';
 import { formatTime } from '/@src/utils/formatters';
-import moment, { max } from 'moment';
+import { locale } from '/@src/i18n';
+
 
 
 const props = defineProps<
@@ -57,6 +60,8 @@ const chartOptions = ref<ChartOptions<'line'>>({
   }
 })
 
+const { t } = useI18n()
+
 const service = new WeatherService()
 
 const convertChartData = () => {
@@ -64,6 +69,9 @@ const convertChartData = () => {
   chartData.value.datasets[0].data = []
   chartData.value.datasets[1].data = []
   chartData.value.datasets[1].hidden = true
+
+  // @ts-ignore
+  chartOptions.value.plugins.legend.display = false
 
   if (selectedDays.value == 1) {
     forecast.value?.list.forEach((item: WeatherChartItem) => {
@@ -85,12 +93,17 @@ const convertChartData = () => {
       const dayData = groupedData[day];
       const dayMoment = moment(day);
 
-      chartData.value.labels?.push(index === 0 ? 'Today' : index === 1 ? 'Tomorrow' : dayMoment.format('dddd'))
+      chartData.value.labels?.push(index === 0 ? t('days.today') : index === 1 ? t('days.tomorrow') : dayMoment.format('dddd').replace(/(^|\s)\S/g, l => l.toUpperCase()))
       const maxTemp = Math.max(...dayData.map((item: WeatherChartItem) => item.main.temp_max))
       const minTemp = Math.min(...dayData.map((item: WeatherChartItem) => item.main.temp_min))
 
       chartData.value.datasets[0].data.push(Math.round(maxTemp));
       chartData.value.datasets[1].data.push(Math.round(minTemp));
+      chartData.value.datasets[0].label = t('weather.day');
+      chartData.value.datasets[1].label = t('weather.night');
+
+      // @ts-ignore
+      chartOptions.value.plugins.legend.display = true
       chartData.value.datasets[1].hidden = false
     })
   }
@@ -126,6 +139,10 @@ onMounted(async () => {
 watch(() => props.city, async () => {
   await fetchForecast()
 })
+
+watch(() => locale.value, async () => {
+  await fetchForecast()
+})
 </script>
 
 <template>
@@ -133,13 +150,13 @@ watch(() => props.city, async () => {
     <div class="chart-wrapper__controls" :class="{ 'fav': fav }">
       <button class="button" v-for="i in daysForecast" :key="i" :class="{ active: i == selectedDays }"
         @click="handleChangeDays(i)">
-        {{ i }} {{ i == 1 ? 'Day' : 'Days' }}
+        {{ i }} {{ i == 1 ? $t('weather.day') : $t('weather.days') }}
       </button>
     </div>
     <WeatherList :forecast="forecast" :days="selectedDays" v-if="forecast && !isLoading && !isEmpty" />
     <BaseChart :chartData="chartData" :chartOptions="chartOptions"
       v-if="isChartDataReady && chartData && !isLoading && !isEmpty" />
-    <h1 v-if="isEmpty && !isLoading">No data, please select city</h1>
+    <h1 v-if="isEmpty && !isLoading">{{ $t('no-city.no-data') }}</h1>
     <Loader height="90%" v-if="isLoading" />
   </div>
 </template>

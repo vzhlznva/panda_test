@@ -4,6 +4,7 @@ import { LocationBlock, LocationItem } from '/@src/types/geo';
 import { WeatherService } from '/@src/services/weather';
 import { formatUnixDay, formatUnixTime } from '/@src/utils/formatters';
 import { useBlocksStorage } from '/@src/state/blocks';
+import { locale } from '/@src/i18n';
 
 
 const props = defineProps<
@@ -45,6 +46,19 @@ watch(() => props.isCurrent, async () => {
     }
   }
 })
+
+watch(() => locale.value, async () => {
+  if (!props.isEmpty) {
+    try {
+      console.log('before')
+      const weather = await weatherService.getWeather(props.location?.location?.latitude as number, props.location?.location?.longitude as number);
+      console.log('after')
+      blocksStorage.replaceWeather(weather, props.index)
+    } catch (error: any) {
+      console.error(error)
+    }
+  }
+})
 </script>
 
 <template>
@@ -69,13 +83,13 @@ watch(() => props.isCurrent, async () => {
       <div class="card-body__right">
         <img :src="`/~/images/weather/${location.weather?.weather[0].icon}.png`" alt="" v-if="location?.weather">
         <div class="card-body__right-temp" v-if="location?.weather">
-          <h3>{{ location.weather.weather[0].main }}</h3>
-          <p>Feels like {{ Math.round(location.weather.main.feels_like) }}&deg;C</p>
+          <h3>{{ location.weather.weather[0].description }}</h3>
+          <p>{{ $t('weather.feels') }} {{ Math.round(location.weather.main.feels_like) }}&deg;C</p>
         </div>
       </div>
     </div>
     <div class="card-empty" v-else-if="!loading">
-      Please, select city
+      {{ $t('no-city.select') }}
     </div>
     <Loader v-if="loading" />
     <DeleteModal ref="modal" :index="index" />
@@ -161,6 +175,7 @@ watch(() => props.isCurrent, async () => {
 
       .day {
         font-size: var(--h3);
+        text-transform: capitalize;
       }
 
       p {
@@ -187,6 +202,10 @@ watch(() => props.isCurrent, async () => {
       &-temp {
         text-align: right;
         margin: 2px 0 0 0;
+
+        h3 {
+          text-transform: capitalize;
+        }
 
         p {
           font-size: var(--small);

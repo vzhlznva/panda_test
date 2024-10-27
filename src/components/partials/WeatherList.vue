@@ -2,6 +2,7 @@
 import { onMounted, ref, watch } from 'vue';
 import { WeatherForecast, WeatherChartItem, WeatherState, ReducedWeatherChartItem } from '/@src/types/weather';
 import moment from 'moment';
+import { useI18n } from 'vue-i18n';
 
 
 const props = defineProps<
@@ -12,6 +13,8 @@ const props = defineProps<
 >()
 
 const forecastInfo = ref<ReducedWeatherChartItem[]>([])
+
+const { t } = useI18n()
 
 const mode = (arr: WeatherState[]) => {
   return arr.sort((a: WeatherState, b: WeatherState) =>
@@ -44,7 +47,7 @@ const convertForecast = () => {
       const dayData = groupedData[day];
       const dayMoment = moment(day);
 
-      const dayy = index === 0 ? 'Today' : index === 1 ? 'Tomorrow' : dayMoment.format('dddd')
+      const dayy = index === 0 ? t('days.today') : index === 1 ? t('days.tomorrow') : dayMoment.format('dddd')
       const maxTemp = Math.max(...dayData.map((item: WeatherChartItem) => item.main.temp_max))
       const minTemp = Math.min(...dayData.map((item: WeatherChartItem) => item.main.temp_min))
       const weath = mode(dayData.map((item: WeatherChartItem) => item.weather[0]))
@@ -82,8 +85,10 @@ watch(() => props.forecast, () => {
 .weather-list {
   display: flex;
   flex-direction: row;
-  gap: 16px;
+  gap: 10px;
   align-items: center;
   margin-bottom: 24px;
+  width: 100%;
+  max-width: 658px;
 }
 </style>

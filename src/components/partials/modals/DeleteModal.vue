@@ -25,13 +25,13 @@ defineExpose({
 <template>
   <Modal ref="modal">
     <template #title>
-      Delete
+      {{ $t('delete.title') }}
     </template>
     <div class="delete-body">
-      <h2>Are you sure you want to delete location?</h2>
+      <h2>{{ $t('delete.text') }}</h2>
       <div class="delete-body__actions">
-        <button @click="handleDelete">Yes</button>
-        <button class="decline" @click="modal?.close()">No</button>
+        <button @click="handleDelete">{{ $t('delete.yes') }}</button>
+        <button class="decline" @click="modal?.close()">{{ $t('delete.no') }}</button>
       </div>
     </div>
   </Modal>

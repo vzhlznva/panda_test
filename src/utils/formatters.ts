@@ -1,5 +1,6 @@
 // import moment from "moment";
 import moment from "moment-timezone";
+import "moment/dist/locale/uk";
 // https://momentjs.com/docs/#/i18n/
 
 export function formatDate(value: string | Date) {
@@ -27,7 +28,7 @@ export function formatDateTime(value: string | Date) {
 
 export function formatDay(value: string | Date) {
   if (value) {
-    return moment(new Date(value)).format("dddd");
+    return moment(new Date(value)).format("Dddd");
   }
 }
 

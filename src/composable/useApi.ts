@@ -60,9 +60,6 @@ export function initGeoApi() {
       "x-rapidapi-key": "8b58007bc2msh850fe94f3deb69ep1fb800jsnae50500d7bda",
       "x-rapidapi-host": "wft-geo-db.p.rapidapi.com",
     },
-    params: {
-      languageCode: locale.value,
-    },
   });
 
   geoApi.interceptors.request.use(async (config: any) => {

@@ -38,6 +38,7 @@ const props = defineProps<
 
   p {
     font-size: var(--small);
+    text-transform: capitalize;
   }
 
   .day-temp {

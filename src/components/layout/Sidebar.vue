@@ -14,13 +14,17 @@ const isSidebarActive = ref<boolean>(false)
     <div class="sidebar-menu">
       <RouterLink :to="{ name: 'index' }" class="sidebar-menu__item" :class="{ 'active': route.name == 'index' }">
         <IWeatherDashboard class="sidebar-menu__item-icon" />
-        <span>Dashboard</span>
+        <span>{{ $t('menu.dashboard') }}</span>
       </RouterLink>
       <RouterLink :to="{ name: 'favourites' }" class="sidebar-menu__item"
         :class="{ 'active': route.name == 'favourites' }">
         <IWeatherHeart class="sidebar-menu__item-icon" />
-        <span>Favourites</span>
+        <span>{{ $t('menu.favor') }}</span>
       </RouterLink>
+    </div>
+    <div class="sidebar-bottom">
+      <div class="sidebar-divider"></div>
+      <LocaleSwitch />
     </div>
   </div>
 </template>
@@ -35,7 +39,7 @@ const isSidebarActive = ref<boolean>(false)
   top: 40px;
   display: flex;
   flex-direction: column;
-  padding: 48px 0 0;
+  padding: 48px 0;
   align-items: center;
   transition: min-width 0.25s ease;
   height: calc(100vh - 80px);
@@ -110,6 +114,15 @@ const isSidebarActive = ref<boolean>(false)
         transition: left 0.25s ease-in-out;
       }
     }
+  }
+
+  &-bottom {
+    margin: auto 0 0 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
   }
 }
 </style>
