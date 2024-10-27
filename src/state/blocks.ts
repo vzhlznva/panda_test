@@ -1,21 +1,62 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { LocationBlock, LocationItem } from "../types/geo";
-import { WeatherService } from "../services/weather";
-import { useApi } from "../composable/useApi";
+import { useLocalStorage } from "@vueuse/core";
+import useNotyf from "../composable/useNotyf";
 
 export const useBlocksStorage = defineStore("data", () => {
   const blocks = ref<LocationBlock[]>([]);
   const currentBlock = ref<LocationBlock>(blocks.value[0]);
   const currentIndex = ref<number | null>(0);
+  const favorites = useLocalStorage<LocationItem[]>("favorites", []);
+
+  const notyf = useNotyf();
 
   const addBlock = (item: LocationBlock) => {
-    blocks.value.push(item);
+    if (
+      blocks.value.findIndex(
+        (block: LocationBlock) =>
+          block.location?.latitude == item.location?.latitude &&
+          block.location?.longitude == item.location?.longitude &&
+          block.location?.city == item.location?.city
+      ) == -1
+    ) {
+      blocks.value.push(item);
+    } else {
+      notyf.error("Location is already exists");
+    }
   };
 
   const selectBlock = (i: number) => {
     currentBlock.value = blocks.value[i];
     currentIndex.value = i;
+  };
+
+  const addFavorite = (block: LocationBlock, i: number) => {
+    if (
+      !favorites.value.find(
+        (fav: LocationItem) =>
+          fav.longitude == block.location?.longitude &&
+          fav.latitude == block.location?.latitude &&
+          fav.city == block.location?.city
+      )
+    ) {
+      favorites.value.push(block.location as LocationItem);
+      blocks.value[i].fav = true;
+    }
+  };
+
+  const removeFavorite = (block: LocationBlock, i: number) => {
+    const index = favorites.value.findIndex(
+      (fav: LocationItem) =>
+        fav.latitude == block.location?.latitude &&
+        fav.longitude == block.location.longitude &&
+        fav.city == block.location.city
+    );
+    if (index !== -1) {
+      favorites.value.splice(index, 1);
+      blocks.value[i].fav = false;
+    }
   };
 
   const setCurrentCity = (block: LocationBlock) => {
@@ -51,6 +92,8 @@ export const useBlocksStorage = defineStore("data", () => {
     selectBlock,
     setCurrentCity,
     deleteBlock,
+    addFavorite,
+    removeFavorite,
     blocks,
     currentBlock,
     currentIndex,

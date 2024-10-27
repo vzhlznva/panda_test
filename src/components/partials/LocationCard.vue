@@ -16,14 +16,23 @@ const props = defineProps<
 >()
 
 const modal = ref()
+const favModal = ref()
 const weatherService = new WeatherService()
 const blocksStorage = useBlocksStorage()
+
+const handleFavorite = (loc: LocationBlock, i: number) => {
+  if (!loc.fav) {
+    blocksStorage.addFavorite(loc as LocationBlock, i)
+  } else {
+    favModal.value.open()
+  }
+}
 
 watch(() => props.isCurrent, async () => {
   if (props.isCurrent && !props.isEmpty) {
     try {
       const weather = await weatherService.getWeather(props.location?.location?.latitude as number, props.location?.location?.longitude as number)
-      blocksStorage.setCurrentCity({ location: props.location?.location as LocationItem, weather: weather })
+      blocksStorage.setCurrentCity({ location: props.location?.location as LocationItem, weather: weather, fav: props.location?.fav })
     } catch (error: any) {
       console.error(error)
     }
@@ -33,13 +42,14 @@ watch(() => props.isCurrent, async () => {
 
 <template>
   <div class="card" :class="{ 'current': isCurrent }">
-    <div class="card-header" v-if="!isEmpty">
-      <div class="card-header__loc">
+    <div class="card-header" :class="{ 'empty': isEmpty }">
+      <div class="card-header__loc" v-if="!isEmpty">
         <p>{{ location?.location?.city }}, {{ location?.location?.country_code }}</p>
       </div>
       <div class="card-header__actions">
         <IWeatherDelete class="card-header__fav" @click="modal.open()" />
-        <IWeatherHeart class="card-header__fav" />
+        <IWeatherHeart class="card-header__fav" :class="{ 'fav': location?.fav }" v-if="!isEmpty"
+          @click="handleFavorite(location as LocationBlock, index)" />
       </div>
 
     </div>
@@ -61,6 +71,7 @@ watch(() => props.isCurrent, async () => {
       Please, select city
     </div>
     <DeleteModal ref="modal" :index="index" />
+    <RemoveFav ref="favModal" :index="index" :block="location" />
   </div>
 </template>
 
@@ -89,6 +100,11 @@ watch(() => props.isCurrent, async () => {
     align-items: center;
     margin: 0 0 10px 0;
 
+    &.empty {
+      justify-content: flex-end;
+      margin: 0;
+    }
+
     &__loc {
       display: flex;
       flex-direction: row;
@@ -116,6 +132,11 @@ watch(() => props.isCurrent, async () => {
       height: 24px;
       width: 24px;
       cursor: pointer;
+
+      &.fav {
+        fill: #F5BD52;
+        stroke: #F5BD52;
+      }
     }
   }
 

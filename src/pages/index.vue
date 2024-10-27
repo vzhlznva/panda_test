@@ -17,15 +17,16 @@ const weatherService = new WeatherService()
 const service = new GeoService();
 
 onBeforeMount(async () => {
-  try {
-    currLoc.value = await service.getCurrentLocation()
-    currWeather.value = await weatherService.getWeather(currLoc.value.latitude, currLoc.value.longitude)
-    blocksStorage.addBlock({ location: currLoc.value, weather: currWeather.value })
-    blocksStorage.selectBlock(0)
-  } catch (error: any) {
-    console.error(error)
+  if (blocksStorage.blocks.length == 0) {
+    try {
+      currLoc.value = await service.getCurrentLocation()
+      currWeather.value = await weatherService.getWeather(currLoc.value.latitude, currLoc.value.longitude)
+      blocksStorage.addBlock({ location: currLoc.value, weather: currWeather.value })
+      blocksStorage.selectBlock(0)
+    } catch (error: any) {
+      console.error(error)
+    }
   }
-
 })
 </script>
 

@@ -12,6 +12,7 @@ export interface LocationItem {
 export interface LocationBlock {
   location: LocationItem | null;
   weather: Weather | null;
+  fav?: boolean;
 }
 
 export interface City extends LocationItem {

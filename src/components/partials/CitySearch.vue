@@ -117,7 +117,7 @@ onClickOutside(search, () => {
       -webkit-text-fill-color: var(--white) !important;
       background-color: var(--black-800) !important;
       border: none !important;
-      transition: background-color 9999s ease-in-out 0s;
+      transition: background-color 99999999s ease-in-out 0s;
     }
 
     /* Autofill for Firefox */

@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { LocationBlock, LocationItem } from '/@src/types/geo';
-import { Weather, WeatherForecast } from '/@src/types/weather';
-import { WeatherService } from '/@src/services/weather';
-import { formatTime, formatUnixTime } from '/@src/utils/formatters';
+import { LocationBlock } from '/@src/types/geo';
+import { formatUnixTime } from '/@src/utils/formatters';
 
 
 const props = defineProps<
@@ -18,7 +15,7 @@ const props = defineProps<
   <div class="highlights">
     <h2>Today's Highlight</h2>
     <div class="highlights-body">
-      <div class="highlights-body__item small">
+      <div class="highlights-body__item small" v-if="block.weather">
         <div class="head">
           <IWeatherWind />
           Wind
@@ -30,7 +27,7 @@ const props = defineProps<
           {{ formatUnixTime(block.weather?.dt, block.weather?.timezone) }}
         </div>
       </div>
-      <div class="highlights-body__item small">
+      <div class="highlights-body__item small" v-if="block.weather">
         <div class="head">
           <IWeatherHumidity />
           Humidity
@@ -42,7 +39,7 @@ const props = defineProps<
           {{ formatUnixTime(block.weather?.dt, block.weather?.timezone) }}
         </div>
       </div>
-      <div class="highlights-body__item small">
+      <div class="highlights-body__item small" v-if="block.weather">
         <div class="head">
           <IWeatherVisibility />
           Visibility
@@ -54,7 +51,7 @@ const props = defineProps<
           {{ formatUnixTime(block.weather?.dt, block.weather?.timezone) }}
         </div>
       </div>
-      <div class="highlights-body__item big">
+      <div class="highlights-body__item big" v-if="block.weather">
         <div class="head">
           <img src="/~/images/weather/sunrise.png" alt="sunrise">
         </div>
@@ -65,7 +62,7 @@ const props = defineProps<
           {{ formatUnixTime(block.weather?.sys.sunrise, block.weather?.timezone) }}
         </div>
       </div>
-      <div class="highlights-body__item big">
+      <div class="highlights-body__item big" v-if="block.weather">
         <div class="head">
           <img src="/~/images/weather/sunset.png" alt="sunrise">
         </div>
@@ -76,6 +73,7 @@ const props = defineProps<
           {{ formatUnixTime(block.weather?.sys.sunset, block.weather?.timezone) }}
         </div>
       </div>
+      <h2 v-else>No Data</h2>
     </div>
   </div>
 </template>
