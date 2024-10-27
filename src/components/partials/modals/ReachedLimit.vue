@@ -1,23 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useBlocksStorage } from '/@src/state/blocks';
-import { LocationBlock, LocationItem } from '/@src/types/geo';
-
-const props = defineProps<
-  {
-    index?: number;
-    block: LocationBlock,
-    favOnly: boolean
-  }
->()
 
 const modal = ref<Modal | null>(null)
 const storage = useBlocksStorage()
-
-const handleRemove = () => {
-  storage.removeFavorite(props.block.location as LocationItem, props.index, props.favOnly);
-  modal.value?.close()
-}
 
 defineExpose({
   open: () => modal.value?.open(),
@@ -31,11 +17,7 @@ defineExpose({
       Delete
     </template>
     <div class="delete-body">
-      <h2>Are you sure you want to remove from favorites?</h2>
-      <div class="delete-body__actions">
-        <button @click="handleRemove">Yes</button>
-        <button class="decline" @click="modal?.close()">No</button>
-      </div>
+      <h2>You have reached the limit of 5 favorites. Please, delete one location and try again</h2>
     </div>
   </Modal>
 </template>

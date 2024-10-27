@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { LocationBlock, LocationItem } from '/@src/types/geo';
 import { WeatherService } from '/@src/services/weather';
 
@@ -11,7 +11,8 @@ import moment, { max } from 'moment';
 
 const props = defineProps<
   {
-    city: LocationBlock;
+    city: LocationItem;
+    fav?: boolean
   }
 >()
 
@@ -51,15 +52,6 @@ const chartOptions = ref<ChartOptions<'line'>>({
     legend: {
       display: false
     },
-    // tooltip: {
-    //   callbacks: {
-    //     label: (tooltipItem) => {
-    //       const xValue = tooltipItem.label
-    //       const yValue = tooltipItem.formattedValue
-    //       return `${xValue}\n${yValue}\u00B0C`
-    //     }
-    //   }
-    // }
   }
 })
 
@@ -90,7 +82,6 @@ const convertChartData = () => {
     Object.keys(groupedData).forEach((day: string, index) => {
       const dayData = groupedData[day];
       const dayMoment = moment(day);
-      console.log(day)
 
       chartData.value.labels?.push(index === 0 ? 'Today' : index === 1 ? 'Tomorrow' : dayMoment.format('dddd'))
       const maxTemp = Math.max(...dayData.map((item: WeatherChartItem) => item.main.temp_max))
@@ -108,7 +99,7 @@ const convertChartData = () => {
 const fetchForecast = async () => {
   isChartDataReady.value = false
   try {
-    forecast.value = await service.getForecast(props.city.location?.latitude as number, props.city.location?.longitude as number, selectedDays.value)
+    forecast.value = await service.getForecast(props.city.latitude as number, props.city.longitude as number, selectedDays.value)
   } catch (error: any) {
     console.error(error)
   } finally {
@@ -124,16 +115,21 @@ const handleChangeDays = async (i: number) => {
 onMounted(async () => {
   await fetchForecast()
 })
+
+watch(() => props.city, async () => {
+  await fetchForecast()
+})
 </script>
 
 <template>
   <div class="chart-wrapper">
-    <div class="chart-wrapper__controls">
+    <div class="chart-wrapper__controls" :class="{ 'fav': fav }">
       <button class="button" v-for="i in daysForecast" :key="i" :class="{ active: i == selectedDays }"
         @click="handleChangeDays(i)">
         {{ i }} {{ i == 1 ? 'Day' : 'Days' }}
       </button>
     </div>
+    <WeatherList :forecast="forecast" :days="selectedDays" v-if="forecast" />
     <BaseChart :chartData="chartData" :chartOptions="chartOptions" v-if="isChartDataReady && chartData" />
   </div>
 </template>
@@ -147,9 +143,13 @@ onMounted(async () => {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: flex-end;
     gap: 16px;
     margin: 0 0 24px;
+
+    &.fav {
+      justify-content: flex-end;
+    }
 
     .button {
       cursor: pointer;

@@ -47,7 +47,7 @@ onBeforeMount(async () => {
     </div>
     <div class="main-block__info">
       <div class="main-block__chart">
-        <WeatherChart v-if="blocksStorage.currentBlock" :city="blocksStorage.currentBlock" />
+        <WeatherChart v-if="blocksStorage.currentBlock" :city="blocksStorage.currentBlock.location" />
       </div>
       <Hightights :block="blocksStorage.currentBlock" v-if="blocksStorage.currentBlock" />
     </div>
@@ -75,6 +75,7 @@ onBeforeMount(async () => {
     top: 0;
     height: 97px;
     background-color: var(--black2-800);
+    z-index: 99999999;
 
     h1 {
       margin: 0 0 10px 0;

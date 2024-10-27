@@ -46,16 +46,20 @@ export const useBlocksStorage = defineStore("data", () => {
     }
   };
 
-  const removeFavorite = (block: LocationBlock, i: number) => {
+  const removeFavorite = (
+    block: LocationItem,
+    i?: number,
+    favOnly: boolean = false
+  ) => {
     const index = favorites.value.findIndex(
       (fav: LocationItem) =>
-        fav.latitude == block.location?.latitude &&
-        fav.longitude == block.location.longitude &&
-        fav.city == block.location.city
+        fav.latitude == block.latitude &&
+        fav.longitude == block.longitude &&
+        fav.city == block.city
     );
     if (index !== -1) {
       favorites.value.splice(index, 1);
-      blocks.value[i].fav = false;
+      if (!favOnly && i) blocks.value[i].fav = false;
     }
   };
 
@@ -97,5 +101,6 @@ export const useBlocksStorage = defineStore("data", () => {
     blocks,
     currentBlock,
     currentIndex,
+    favorites,
   };
 });

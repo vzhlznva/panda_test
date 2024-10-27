@@ -55,7 +55,7 @@ export interface Weather {
 export interface WeatherChartItem {
   dt: number;
   main: MainWeather;
-  weather: WeatherState;
+  weather: WeatherState[];
   clouds: {
     all: number;
   };
@@ -72,6 +72,13 @@ export interface WeatherChartItem {
     pod: string;
   };
   dt_txt: string;
+}
+
+export interface ReducedWeatherChartItem {
+  day: string;
+  weather: WeatherState[];
+  min: number;
+  max: number;
 }
 
 export interface WeatherForecast {

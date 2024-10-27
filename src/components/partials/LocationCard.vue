@@ -17,11 +17,17 @@ const props = defineProps<
 
 const modal = ref()
 const favModal = ref()
+const limitModal = ref()
+
 const weatherService = new WeatherService()
+
 const blocksStorage = useBlocksStorage()
 
 const handleFavorite = (loc: LocationBlock, i: number) => {
   if (!loc.fav) {
+    if (blocksStorage.favorites.length == 5) {
+      limitModal.value.open()
+    }
     blocksStorage.addFavorite(loc as LocationBlock, i)
   } else {
     favModal.value.open()
@@ -71,7 +77,8 @@ watch(() => props.isCurrent, async () => {
       Please, select city
     </div>
     <DeleteModal ref="modal" :index="index" />
-    <RemoveFav ref="favModal" :index="index" :block="location" />
+    <RemoveFav ref="favModal" :index="index" :block="location" :favOnly="false" />
+    <ReachedLimit ref="limitModal" />
   </div>
 </template>
 
@@ -173,7 +180,6 @@ watch(() => props.isCurrent, async () => {
       img {
         max-height: 64px;
         max-width: 64px;
-        size: 110%;
       }
 
       &-temp {
