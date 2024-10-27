@@ -1,9 +1,17 @@
+import { Weather } from "./weather";
+
 export interface LocationItem {
   city: string;
   country: string;
   latitude: number;
   longitude: number;
   timezone: string;
+  country_code: string;
+}
+
+export interface LocationBlock {
+  location: LocationItem | null;
+  weather: Weather | null;
 }
 
 export interface City extends LocationItem {
@@ -11,13 +19,11 @@ export interface City extends LocationItem {
   wikiDataId: string;
   type: string;
   name: string;
-  countryCode: string;
   region: string;
   regionCode: string;
   regionWdId: string;
-  latitude: number;
-  longitude: number;
   population: number;
+  countryCode: string;
 }
 
 export interface CurrentLocation {

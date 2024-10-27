@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { LocationItem } from '/@src/types/geo';
+import { LocationBlock, LocationItem } from '/@src/types/geo';
 import { Weather, WeatherForecast } from '/@src/types/weather';
 import { WeatherService } from '/@src/services/weather';
 import { formatTime, formatUnixTime } from '/@src/utils/formatters';
@@ -8,7 +8,7 @@ import { formatTime, formatUnixTime } from '/@src/utils/formatters';
 
 const props = defineProps<
   {
-    weather: Weather;
+    block: LocationBlock;
   }
 >()
 
@@ -24,10 +24,10 @@ const props = defineProps<
           Wind
         </div>
         <div class="data">
-          <span>{{ weather.wind.speed }}</span> m/s
+          <span>{{ block.weather?.wind.speed }}</span> m/s
         </div>
-        <div class="time">
-          {{ formatUnixTime(weather.dt, weather.timezone) }}
+        <div class="time" v-if="block.weather">
+          {{ formatUnixTime(block.weather?.dt, block.weather?.timezone) }}
         </div>
       </div>
       <div class="highlights-body__item small">
@@ -36,10 +36,10 @@ const props = defineProps<
           Humidity
         </div>
         <div class="data">
-          <span>{{ weather.main.humidity }}</span> %
+          <span>{{ block.weather?.main.humidity }}</span> %
         </div>
-        <div class="time">
-          {{ formatUnixTime(weather.dt, weather.timezone) }}
+        <div class="time" v-if="block.weather">
+          {{ formatUnixTime(block.weather?.dt, block.weather?.timezone) }}
         </div>
       </div>
       <div class="highlights-body__item small">
@@ -47,11 +47,11 @@ const props = defineProps<
           <IWeatherVisibility />
           Visibility
         </div>
-        <div class="data">
-          <span>{{ Math.round(weather.visibility / 1000) }}</span> km
+        <div class="data" v-if="block.weather">
+          <span>{{ Math.round(block.weather?.visibility / 1000) }}</span> km
         </div>
-        <div class="time">
-          {{ formatUnixTime(weather.dt, weather.timezone) }}
+        <div class="time" v-if="block.weather">
+          {{ formatUnixTime(block.weather?.dt, block.weather?.timezone) }}
         </div>
       </div>
       <div class="highlights-body__item big">
@@ -61,8 +61,8 @@ const props = defineProps<
         <div class="title">
           Sunrise
         </div>
-        <div class="time">
-          {{ formatUnixTime(weather.sys.sunrise, weather.timezone) }}
+        <div class="time" v-if="block.weather">
+          {{ formatUnixTime(block.weather?.sys.sunrise, block.weather?.timezone) }}
         </div>
       </div>
       <div class="highlights-body__item big">
@@ -72,8 +72,8 @@ const props = defineProps<
         <div class="title">
           Sunset
         </div>
-        <div class="time">
-          {{ formatUnixTime(weather.sys.sunset, weather.timezone) }}
+        <div class="time" v-if="block.weather">
+          {{ formatUnixTime(block.weather?.sys.sunset, block.weather?.timezone) }}
         </div>
       </div>
     </div>

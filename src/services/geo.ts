@@ -37,7 +37,7 @@ export class GeoService {
 
   public async getCurrentLocation(): Promise<LocationItem> {
     const { data } = await axios.get("https://get.geojs.io/v1/ip/geo.json");
-    const { city, country, latitude, longitude, timezone } = data;
+    const { city, country, latitude, longitude, timezone, country_code } = data;
 
     const currLoc: LocationItem = {
       city,
@@ -45,9 +45,8 @@ export class GeoService {
       latitude,
       longitude,
       timezone,
+      country_code,
     };
-
-    console.log(currLoc);
 
     return currLoc;
   }

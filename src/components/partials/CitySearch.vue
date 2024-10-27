@@ -3,17 +3,44 @@ import { ref } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import { GeoService } from '/@src/services/geo';
 import { City } from '/@src/types/geo';
+import { useBlocksStorage } from '/@src/state/blocks';
+import { WeatherService } from '/@src/services/weather';
 
 
 const cities = ref<City[]>([] as City[])
 const prefix = ref<string | null>(null);
 const isResultsActive = ref<boolean>(false);
-const search = ref<HTMLDivElement | null>(null)
+const search = ref<HTMLDivElement | null>(null);
+
+const blocksStorage = useBlocksStorage()
 
 const service = new GeoService();
+const weatherService = new WeatherService()
 
 const handleResultsActive = () => {
   isResultsActive.value = cities.value.length !== 0 && prefix.value !== ''
+}
+
+const handleSelectCity = async (city: City) => {
+  try {
+    const data = await weatherService.getWeather(city.latitude, city.longitude)
+    blocksStorage.setCurrentCity({
+      location: {
+        city: city.name,
+        country: city.country,
+        longitude: city.longitude,
+        latitude: city.latitude,
+        timezone: city.timezone,
+        country_code: city.countryCode
+      },
+      weather: data
+    })
+    console.log(blocksStorage.currentBlock, blocksStorage.blocks)
+  } catch (error: any) {
+    console.error(error)
+  }
+
+  isResultsActive.value = false
 }
 
 const fetchCities = async () => {
@@ -39,7 +66,7 @@ onClickOutside(search, () => {
     </div>
     <div class="search-results" :class="{ active: isResultsActive }">
       <div class="search-results__wrapper">
-        <div class="search-results__item" v-for="city in cities" :key="city.id">
+        <div class="search-results__item" v-for="city in cities" :key="city.id" @click="handleSelectCity(city)">
           <p class="city">{{ city.name }}</p>
           <p class="country">{{ city.country }}</p>
           <div class="divider"></div>
@@ -113,6 +140,7 @@ onClickOutside(search, () => {
     transform-origin: top;
     transition: transform 0.25s ease, opacity 0.25s ease;
     pointer-events: none;
+    z-index: 1000;
 
     &__wrapper {
       overflow-y: scroll;

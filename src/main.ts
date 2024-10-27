@@ -26,6 +26,7 @@ async function createApp() {
   const storage = initStorage();
   const api = initApi();
   const geoApi = initGeoApi();
+
   const pinia = createPinia();
 
   const app = createClientApp({

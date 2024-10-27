@@ -100,7 +100,7 @@ export function initGeoApi() {
 export function useApi() {
   const api = inject(apiSymbol);
   if (!api) {
-    throw new Error("Api not properly injected in app");
+    throw new Error("WeatherApi not properly injected in app");
   }
   return api;
 }
@@ -108,7 +108,7 @@ export function useApi() {
 export function useGeoApi() {
   const geoApi = inject(apiGeoSymbol);
   if (!geoApi) {
-    throw new Error("Api not properly injected in app");
+    throw new Error("GeoApi not properly injected in app");
   }
   return geoApi;
 }

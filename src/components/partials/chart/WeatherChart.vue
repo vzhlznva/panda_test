@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { LocationItem } from '/@src/types/geo';
+import { LocationBlock, LocationItem } from '/@src/types/geo';
 import { WeatherService } from '/@src/services/weather';
 
 import { WeatherChartItem, WeatherForecast } from '/@src/types/weather';
@@ -11,7 +11,7 @@ import moment, { max } from 'moment';
 
 const props = defineProps<
   {
-    city: LocationItem;
+    city: LocationBlock;
   }
 >()
 
@@ -108,13 +108,11 @@ const convertChartData = () => {
 const fetchForecast = async () => {
   isChartDataReady.value = false
   try {
-    forecast.value = await service.getForecast(props.city.latitude, props.city.longitude, selectedDays.value)
+    forecast.value = await service.getForecast(props.city.location?.latitude as number, props.city.location?.longitude as number, selectedDays.value)
   } catch (error: any) {
     console.error(error)
   } finally {
-    console.log(forecast.value)
     convertChartData()
-    console.log(chartData.value)
   }
 }
 

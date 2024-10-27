@@ -4,21 +4,24 @@ import { GeoService } from '../services/geo';
 import { LocationItem } from '../types/geo';
 import { WeatherService } from '/@src/services/weather';
 import { Weather, WeatherForecast } from '/@src/types/weather';
+import { useBlocksStorage } from '../state/blocks';
 
 
 const currLoc = ref<LocationItem | null>(null)
 const currWeather = ref<Weather | null>(null)
 const forecast = ref<WeatherForecast | undefined>(undefined)
 
+const blocksStorage = useBlocksStorage()
+
 const weatherService = new WeatherService()
 const service = new GeoService();
-
 
 onBeforeMount(async () => {
   try {
     currLoc.value = await service.getCurrentLocation()
     currWeather.value = await weatherService.getWeather(currLoc.value.latitude, currLoc.value.longitude)
-
+    blocksStorage.addBlock({ location: currLoc.value, weather: currWeather.value })
+    blocksStorage.selectBlock(0)
   } catch (error: any) {
     console.error(error)
   }
@@ -33,13 +36,19 @@ onBeforeMount(async () => {
       <CitySearch />
     </div>
     <div class="main-block__locations">
-      <LocationCard :city="currLoc" :weather="currWeather" v-if="currLoc && currWeather" />
+      <LocationCard :location="block" :isCurrent="blocksStorage.currentIndex == i"
+        :isEmpty="block.location == null && block.weather == null" :index="i" v-for="block, i in blocksStorage.blocks"
+        @click="blocksStorage.selectBlock(i)" />
+      <button class="main-block__locations-add" @click="blocksStorage.addBlock({ location: null, weather: null })"
+        v-if="blocksStorage.blocks.length < 5">
+        +
+      </button>
     </div>
     <div class="main-block__info">
       <div class="main-block__chart">
-        <WeatherChart v-if="currLoc" :city="currLoc" />
+        <WeatherChart v-if="blocksStorage.currentBlock" :city="blocksStorage.currentBlock" />
       </div>
-      <Hightights :weather="currWeather" v-if="currWeather" />
+      <Hightights :block="blocksStorage.currentBlock" v-if="blocksStorage.currentBlock" />
     </div>
 
   </div>
@@ -52,7 +61,7 @@ onBeforeMount(async () => {
   gap: 24px;
   position: relative;
   width: 100%;
-  padding: 97px 0 0;
+  padding: 121px 0 0;
 
   &__head {
     display: flex;
@@ -68,6 +77,30 @@ onBeforeMount(async () => {
 
     h1 {
       margin: 0 0 10px 0;
+    }
+  }
+
+  &__locations {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    align-items: center;
+    width: 100%;
+
+    &-add {
+      height: 50%;
+      aspect-ratio: 1;
+      outline: none;
+      background-color: var(--black-800);
+      border-radius: 100%;
+      color: var(--white);
+      font-size: var(--h1);
+      filter: none;
+      transition: filter 0.25s ease;
+
+      &:hover {
+        filter: drop-shadow(0px 0px 5px #F5BD52);
+      }
     }
   }
 

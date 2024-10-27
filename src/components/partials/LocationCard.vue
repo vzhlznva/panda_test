@@ -1,44 +1,66 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import { LocationItem } from '/@src/types/geo';
-import { Weather } from '/@src/types/weather';
-import { formatDateByTimeZone, formatDayByTimeZone } from '/@src/utils/formatters';
+import { ref, watch } from 'vue';
+import { LocationBlock, LocationItem } from '/@src/types/geo';
+import { WeatherService } from '/@src/services/weather';
+import { formatUnixDay, formatUnixTime } from '/@src/utils/formatters';
+import { useBlocksStorage } from '/@src/state/blocks';
 
 
 const props = defineProps<
   {
-    city: LocationItem;
-    weather: Weather;
+    location: LocationBlock | null;
+    isEmpty: boolean,
+    isCurrent: boolean,
+    index: number
   }
 >()
 
-onMounted(() => console.log(props.weather))
+const modal = ref()
+const weatherService = new WeatherService()
+const blocksStorage = useBlocksStorage()
 
+watch(() => props.isCurrent, async () => {
+  if (props.isCurrent && !props.isEmpty) {
+    try {
+      const weather = await weatherService.getWeather(props.location?.location?.latitude as number, props.location?.location?.longitude as number)
+      blocksStorage.setCurrentCity({ location: props.location?.location as LocationItem, weather: weather })
+    } catch (error: any) {
+      console.error(error)
+    }
+  }
+})
 </script>
 
 <template>
-  <div class="card">
-    <div class="card-header">
+  <div class="card" :class="{ 'current': isCurrent }">
+    <div class="card-header" v-if="!isEmpty">
       <div class="card-header__loc">
-        <IWeatherLocation />
-        <p>{{ city.city }}, {{ city.country }}</p>
+        <p>{{ location?.location?.city }}, {{ location?.location?.country_code }}</p>
       </div>
-      <IWeatherHeart class="card-header__fav" />
+      <div class="card-header__actions">
+        <IWeatherDelete class="card-header__fav" @click="modal.open()" />
+        <IWeatherHeart class="card-header__fav" />
+      </div>
+
     </div>
-    <div class="card-body">
+    <div class="card-body" v-if="!isEmpty">
       <div class="card-body__left">
-        <p class="day">{{ formatDayByTimeZone(city.timezone) }}</p>
-        <p>{{ formatDateByTimeZone(city.timezone) }}</p>
-        <h1>{{ Math.round(weather.main.temp) }}&deg;C</h1>
+        <p class="day">{{ formatUnixDay(location?.weather?.dt as number, location?.weather?.timezone as number) }}</p>
+        <p>{{ formatUnixTime(location?.weather?.dt as number, location?.weather?.timezone as number) }}</p>
+        <h1 v-if="location?.weather">{{ Math.round(location.weather.main.temp) }}&deg;C</h1>
       </div>
       <div class="card-body__right">
-        <img :src="`/~/images/weather/${weather.weather[0].icon}.png`" alt="">
-        <div class="card-body__right-temp">
-          <h3>{{ weather.weather[0].main }}</h3>
-          <p>Feels like {{ Math.round(weather.main.feels_like) }}&deg;C</p>
+        <img :src="`/~/images/weather/${location.weather?.weather[0].icon}.png`" alt="" v-if="location?.weather">
+        <div class="card-body__right-temp" v-if="location?.weather">
+          <h3>{{ location.weather.weather[0].main }}</h3>
+          <p>Feels like {{ Math.round(location.weather.main.feels_like) }}&deg;C</p>
         </div>
       </div>
     </div>
+    <div class="card-empty" v-else>
+      Please, select city
+    </div>
+    <DeleteModal ref="modal" :index="index" />
   </div>
 </template>
 
@@ -48,10 +70,17 @@ onMounted(() => console.log(props.weather))
   border-radius: 24px;
   padding: 16px;
   width: 19%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  min-width: 208px;
+  border: 1px solid var(--black-800);
+  transition: border 0.25s ease;
+  cursor: pointer;
+
+  &.current {
+    border: 1px solid #F5BD52;
+  }
 
   &-header {
     display: flex;
@@ -71,7 +100,16 @@ onMounted(() => console.log(props.weather))
 
       p {
         font-size: var(--small);
+        max-width: 90px;
       }
+    }
+
+    &__actions {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     &__fav {
@@ -127,6 +165,13 @@ onMounted(() => console.log(props.weather))
         }
       }
     }
+  }
+
+  &-empty {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 </style>

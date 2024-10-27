@@ -49,3 +49,10 @@ export function formatUnixTime(time: number, tz: number) {
     .utcOffset(tz / 60)
     .format("HH:mm");
 }
+
+export function formatUnixDay(time: number, tz: number) {
+  return moment
+    .unix(time)
+    .utcOffset(tz / 60)
+    .format("dddd");
+}
