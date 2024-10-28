@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
-import { WeatherForecast, WeatherChartItem, WeatherState, ReducedWeatherChartItem } from '/@src/types/weather';
+import { Carousel, Slide, Navigation } from 'vue3-carousel';
 import moment from 'moment';
 import { useI18n } from 'vue-i18n';
 
+import { WeatherForecast, WeatherChartItem, WeatherState, ReducedWeatherChartItem } from '/@src/types/weather';
 
 const props = defineProps<
   {
@@ -11,6 +12,37 @@ const props = defineProps<
     days: number
   }
 >()
+
+const config = {
+  itemsToShow: 8,
+  snapAlign: 'start',
+  breakpoints: {
+    200: {
+      itemsToShow: 3,
+      snapAlign: 'start',
+    },
+    300: {
+      itemsToShow: 4,
+      snapAlign: 'start',
+    },
+    500: {
+      itemsToShow: 5,
+      snapAlign: 'start',
+    },
+    800: {
+      itemsToShow: 6,
+      snapAlign: 'start',
+    },
+    1000: {
+      itemsToShow: 6,
+      snapAlign: 'start',
+    },
+    1250: {
+      itemsToShow: 8,
+      snapAlign: 'start',
+    },
+  }
+}
 
 const forecastInfo = ref<ReducedWeatherChartItem[]>([])
 
@@ -77,7 +109,14 @@ watch(() => props.forecast, () => {
 
 <template>
   <div class="weather-list">
-    <WeatherCard :item="listItem" :days="days" v-for="listItem in forecastInfo" v-if="forecastInfo.length !== 0" />
+    <Carousel :itemsToShow="config.itemsToShow" snapAlign="start" :breakpoints="config.breakpoints">
+      <Slide :key="listItem.day" v-for="listItem in forecastInfo" v-if="forecastInfo.length !== 0">
+        <WeatherCard :item="listItem" :days="days" />
+      </Slide>
+      <template #addons>
+        <Navigation />
+      </template>
+    </Carousel>
   </div>
 </template>
 
@@ -89,6 +128,34 @@ watch(() => props.forecast, () => {
   align-items: center;
   margin-bottom: 24px;
   width: 100%;
-  max-width: 658px;
+
+  .carousel {
+    width: calc(100% + 1.25rem);
+    transform: translateX(-0.625rem);
+
+    @media screen and (max-width: 600px) {
+      width: calc(100% + 0.5rem);
+      transform: translateX(-0.25rem);
+    }
+
+    .carousel__slide {
+      padding-left: 0.625rem;
+      padding-right: 0.625rem;
+
+      @media screen and (max-width: 600px) {
+        padding-left: 0.25rem;
+        padding-right: 0.25rem;
+      }
+    }
+
+    .carousel__icon {
+      fill: var(--white);
+    }
+
+    :deep(.carousel__prev),
+    :deep(.carousel__next) {
+      margin: 0 -15px;
+    }
+  }
 }
 </style>

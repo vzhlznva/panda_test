@@ -20,7 +20,8 @@ export const useBlocksStorage = defineStore("data", () => {
           block.location?.latitude == item.location?.latitude &&
           block.location?.longitude == item.location?.longitude &&
           block.location?.city == item.location?.city
-      ) == -1
+      ) == -1 ||
+      (item.location == null && item.weather == null)
     ) {
       blocks.value.push(item);
     } else {

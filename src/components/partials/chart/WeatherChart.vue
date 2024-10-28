@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
-import { LocationBlock, LocationItem } from '/@src/types/geo';
+import { LocationItem } from '/@src/types/geo';
 import { WeatherService } from '/@src/services/weather';
 import { useI18n } from 'vue-i18n';
 import moment from 'moment';
@@ -9,8 +9,6 @@ import { WeatherChartItem, WeatherForecast } from '/@src/types/weather';
 import { ChartData, ChartOptions } from 'chart.js';
 import { formatTime } from '/@src/utils/formatters';
 import { locale } from '/@src/i18n';
-
-
 
 const props = defineProps<
   {
@@ -93,7 +91,7 @@ const convertChartData = () => {
       const dayData = groupedData[day];
       const dayMoment = moment(day);
 
-      chartData.value.labels?.push(index === 0 ? t('days.today') : index === 1 ? t('days.tomorrow') : dayMoment.format('dddd').replace(/(^|\s)\S/g, l => l.toUpperCase()))
+      chartData.value.labels?.push(index === 0 ? t('days.today') : index === 1 ? t('days.tomorrow') : dayMoment.locale(locale.value).format('dddd').replace(/(^|\s)\S/g, l => l.toUpperCase()))
       const maxTemp = Math.max(...dayData.map((item: WeatherChartItem) => item.main.temp_max))
       const minTemp = Math.min(...dayData.map((item: WeatherChartItem) => item.main.temp_min))
 

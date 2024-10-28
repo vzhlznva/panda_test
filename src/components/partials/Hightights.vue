@@ -14,7 +14,7 @@ const props = defineProps<
 <template>
   <div class="highlights">
     <h2>{{ $t('weather.high') }}</h2>
-    <div class="highlights-body">
+    <div class="highlights-body" :class="{ 'empty': !block.weather }">
       <div class="highlights-body__item small" v-if="block.weather">
         <div class="head">
           <IWeatherWind />
@@ -73,7 +73,7 @@ const props = defineProps<
           {{ formatUnixTime(block.weather?.sys.sunset, block.weather?.timezone) }}
         </div>
       </div>
-      <h2 v-else>No Data</h2>
+      <h2 v-else>{{ $t('no-city.no-data') }}</h2>
     </div>
   </div>
 </template>
@@ -89,6 +89,14 @@ const props = defineProps<
   flex-direction: column;
   gap: 24px;
 
+  @media screen and (max-width: 1200px) {
+    width: 100%;
+  }
+
+  @media screen and (max-width: 400px) {
+    padding: 16px;
+  }
+
   &-body {
     width: 100%;
     height: 100%;
@@ -96,6 +104,27 @@ const props = defineProps<
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(3, 1fr);
     gap: 18px;
+
+    @media screen and (max-width: 1200px) {
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+    }
+
+    @media screen and (max-width: 600px) {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+    }
+
+    @media screen and (max-width: 400px) {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &.empty {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
     &__item {
       background-color: var(--black-700);
@@ -107,6 +136,10 @@ const props = defineProps<
         flex-direction: column;
         gap: 16px;
         align-items: flex-end;
+
+        @media screen and (max-width: 440px) {
+          align-items: center;
+        }
 
         .head {
           display: flex;

@@ -103,7 +103,7 @@ watch(() => locale.value, async () => {
   background-color: var(--black-800);
   border-radius: 24px;
   padding: 16px;
-  width: 19%;
+  width: calc(100% + 24px);
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -171,11 +171,16 @@ watch(() => locale.value, async () => {
     &__left {
       display: flex;
       flex-direction: column;
+      align-items: flex-start;
       gap: 4px;
 
       .day {
         font-size: var(--h3);
         text-transform: capitalize;
+
+        @media screen and (max-width: 600px) {
+          font-size: var(--p);
+        }
       }
 
       p {
@@ -185,6 +190,10 @@ watch(() => locale.value, async () => {
       h1 {
         margin: auto 0 0 0;
         font-size: var(--h2);
+
+        @media screen and (max-width: 600px) {
+          font-size: var(--h3);
+        }
       }
     }
 
@@ -197,6 +206,11 @@ watch(() => locale.value, async () => {
       img {
         max-height: 64px;
         max-width: 64px;
+
+        @media screen and (max-width: 600px) {
+          max-height: 40px;
+          max-width: 40px;
+        }
       }
 
       &-temp {
@@ -205,6 +219,10 @@ watch(() => locale.value, async () => {
 
         h3 {
           text-transform: capitalize;
+
+          @media screen and (max-width: 600px) {
+            font-size: var(--p);
+          }
         }
 
         p {

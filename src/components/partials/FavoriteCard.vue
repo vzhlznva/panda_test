@@ -80,8 +80,9 @@ watch(() => locale.value, async () => {
   background-color: var(--black-800);
   display: flex;
   flex-direction: column;
-
   gap: 24px;
+
+  @media screen and (max-width: 1200px) {}
 
   &-head {
     width: 100%;
@@ -122,12 +123,25 @@ watch(() => locale.value, async () => {
     justify-content: flex-start;
     gap: 50px;
 
+    @media screen and (max-width: 1200px) {
+      flex-direction: column;
+    }
+
     &__current {
       max-width: 200px;
       width: 100%;
       display: flex;
       flex-direction: row;
       justify-content: space-between;
+
+      @media screen and (max-width: 1200px) {
+        max-width: 300px;
+        align-self: flex-start;
+      }
+
+      @media screen and (max-width: 430px) {
+        max-width: unset;
+      }
     }
 
     &__left {

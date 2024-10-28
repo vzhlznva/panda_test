@@ -1,11 +1,43 @@
 <script setup lang="ts">
 import { onBeforeMount, onMounted, ref } from 'vue';
+import { Carousel, Slide, Navigation } from 'vue3-carousel';
+
 import { GeoService } from '../services/geo';
 import { LocationItem } from '../types/geo';
 import { WeatherService } from '/@src/services/weather';
-import { Weather, WeatherForecast } from '/@src/types/weather';
+import { Weather } from '/@src/types/weather';
 import { useBlocksStorage } from '../state/blocks';
 
+const config = {
+  itemsToShow: 5,
+  snapAlign: 'start',
+  breakpoints: {
+    200: {
+      itemsToShow: 1,
+      snapAlign: 'start',
+    },
+    300: {
+      itemsToShow: 1.8,
+      snapAlign: 'start',
+    },
+    500: {
+      itemsToShow: 2.5,
+      snapAlign: 'start',
+    },
+    800: {
+      itemsToShow: 3.5,
+      snapAlign: 'start',
+    },
+    1000: {
+      itemsToShow: 4,
+      snapAlign: 'start',
+    },
+    1250: {
+      itemsToShow: 5,
+      snapAlign: 'start',
+    },
+  }
+}
 
 const currLoc = ref<LocationItem | null>(null)
 const currWeather = ref<Weather | null>(null)
@@ -37,13 +69,21 @@ onBeforeMount(async () => {
   <div class="main-block">
     <Header />
     <div class="main-block__locations">
-      <LocationCard :location="block" :isCurrent="blocksStorage.currentIndex == i"
-        :isEmpty="block.location == null && block.weather == null" :index="i" v-for="block, i in blocksStorage.blocks"
-        @click="blocksStorage.selectBlock(i)" :loading="isLoading" />
-      <button class="main-block__locations-add" @click="blocksStorage.addBlock({ location: null, weather: null })"
-        v-if="blocksStorage.blocks.length < 5">
-        +
-      </button>
+      <Carousel :itemsToShow="config.itemsToShow" snapAlign="start" :breakpoints="config.breakpoints">
+        <slide v-for="block, i in blocksStorage.blocks" :key="i">
+          <LocationCard :location="block" :isCurrent="blocksStorage.currentIndex == i"
+            :isEmpty="block.location == null && block.weather == null" :index="i" @click="blocksStorage.selectBlock(i)"
+            :loading="isLoading" />
+        </slide>
+        <slide v-if="blocksStorage.blocks.length < 5" :key="blocksStorage.blocks.length">
+          <button class="main-block__locations-add" @click="blocksStorage.addBlock({ location: null, weather: null })">
+            +
+          </button>
+        </slide>
+        <template #addons>
+          <Navigation />
+        </template>
+      </Carousel>
     </div>
     <div class="main-block__info">
       <div class="main-block__chart">
@@ -57,19 +97,29 @@ onBeforeMount(async () => {
 
 <style lang="scss" scoped>
 .main-block {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  position: relative;
-  width: 100%;
+
 
   &__locations {
-    display: flex;
-    flex-direction: row;
-    gap: 16px;
-    align-items: center;
     width: 100%;
-    padding: 0 0 0 2px;
+
+    .carousel {
+      width: calc(100% + 1.25rem);
+      transform: translateX(-0.625rem);
+
+      .carousel__slide {
+        padding-left: 0.625rem;
+        padding-right: 0.625rem;
+      }
+
+      .carousel__icon {
+        fill: var(--white);
+      }
+
+      :deep(.carousel__prev),
+      :deep(.carousel__next) {
+        margin: 0 -10px;
+      }
+    }
 
     &-add {
       height: 50%;
@@ -94,6 +144,10 @@ onBeforeMount(async () => {
     gap: 24px;
     width: 100%;
     height: 100%;
+
+    @media screen and (max-width: 1200px) {
+      flex-direction: column;
+    }
   }
 
   &__chart {

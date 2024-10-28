@@ -83,6 +83,7 @@ onClickOutside(switchItem, () => {
     transition: opacity 0.25s, max-height 0.25s, transform 0.25s ease;
     border-radius: 10px;
     width: 100%;
+    z-index: 3;
 
     &.active {
       opacity: 1;

@@ -44,16 +44,52 @@ const isSidebarActive = ref<boolean>(false)
   transition: min-width 0.25s ease;
   height: calc(100vh - 80px);
 
+  @media screen and (max-width: 950px) {
+    width: calc(100% - 40px);
+    height: 64px;
+    top: 20px;
+    margin: 0 20px;
+    flex-direction: row;
+    padding: 0 40px;
+    transition: height 0.25s ease;
+  }
+
+  @media screen and (max-width: 570px) {
+    height: 50px;
+    padding: 0 20px;
+  }
+
+
+
 
   &.active {
     min-width: 180px;
     width: fit-content;
 
+    @media screen and (max-width: 950px) {
+      height: fit-content;
+      height: 100px;
+      width: calc(100% - 40px);
+
+    }
+
+    @media screen and (max-width: 570px) {
+      height: 84px;
+    }
+
     .sidebar-menu__item {
-
-
       span {
         left: 64px;
+
+        @media screen and (max-width: 950px) {
+          left: 25px;
+          top: 70px;
+        }
+
+        @media screen and (max-width: 570px) {
+          left: 8px;
+          top: 60px;
+        }
       }
     }
   }
@@ -67,6 +103,17 @@ const isSidebarActive = ref<boolean>(false)
     height: 2px;
     background: linear-gradient(90deg, #1E1E1E 0%, #4A4949 48%, #1E1E1E 100%);
     margin: 24px 0;
+
+    @media screen and (max-width: 950px) {
+      width: 2px;
+      height: 100%;
+      background: linear-gradient(0deg, #1E1E1E 0%, #4A4949 48%, #1E1E1E 100%);
+      margin: 0 24px;
+    }
+
+    @media screen and (max-width: 570px) {
+      margin: 0 10px;
+    }
   }
 
   &-menu {
@@ -74,6 +121,12 @@ const isSidebarActive = ref<boolean>(false)
     flex-direction: column;
     width: 100%;
     overflow: hidden;
+
+    @media screen and (max-width: 950px) {
+      flex-direction: row;
+      height: 100%;
+      width: fit-content;
+    }
 
     &__item {
       padding: 16px 30px;
@@ -89,10 +142,25 @@ const isSidebarActive = ref<boolean>(false)
       text-decoration: none;
       position: relative;
 
+      @media screen and (max-width: 950px) {
+        padding: 16px 50px;
+      }
+
+      @media screen and (max-width: 570px) {
+        padding: 16px 20px;
+      }
+
+
       &.active {
         background: -moz-linear-gradient(90deg, rgba(183, 183, 183, 1) 0%, rgba(31, 31, 31, 0.5) 5%, rgba(255, 255, 255, 0.1) 51%, rgba(31, 31, 31, 0.5) 100%);
         background: -webkit-linear-gradient(90deg, rgba(183, 183, 183, 1) 0%, rgba(31, 31, 31, 0.5) 5%, rgba(255, 255, 255, 0.1) 51%, rgba(31, 31, 31, 0.5) 100%);
         background: linear-gradient(90deg, rgba(183, 183, 183, 1) 0%, rgba(31, 31, 31, 0.5) 5%, rgba(255, 255, 255, 0.1) 51%, rgba(31, 31, 31, 0.5) 100%);
+
+        @media screen and (max-width: 950px) {
+          background: -moz-linear-gradient(180deg, rgba(183, 183, 183, 1) 0%, rgba(31, 31, 31, 0.5) 5%, rgba(255, 255, 255, 0.1) 51%, rgba(31, 31, 31, 0.5) 100%);
+          background: -webkit-linear-gradient(180deg, rgba(183, 183, 183, 1) 0%, rgba(31, 31, 31, 0.5) 5%, rgba(255, 255, 255, 0.1) 51%, rgba(31, 31, 31, 0.5) 100%);
+          background: linear-gradient(180deg, rgba(183, 183, 183, 1) 0%, rgba(31, 31, 31, 0.5) 5%, rgba(255, 255, 255, 0.1) 51%, rgba(31, 31, 31, 0.5) 100%);
+        }
 
         .sidebar-menu__item-icon {
           fill: var(--white);
@@ -112,6 +180,17 @@ const isSidebarActive = ref<boolean>(false)
         position: absolute;
         left: 100%;
         transition: left 0.25s ease-in-out;
+
+        @media screen and (max-width: 950px) {
+          left: 25px;
+          top: 100%;
+          transition: top 0.25s ease-in-out;
+        }
+
+        @media screen and (max-width: 570px) {
+          font-size: 11px;
+          left: 8px;
+        }
       }
     }
   }
@@ -123,6 +202,13 @@ const isSidebarActive = ref<boolean>(false)
     align-items: center;
     justify-content: center;
     flex-direction: column;
+
+    @media screen and (max-width: 950px) {
+      margin: 0 0 0 auto;
+      height: 100%;
+      width: fit-content;
+      flex-direction: row;
+    }
   }
 }
 </style>

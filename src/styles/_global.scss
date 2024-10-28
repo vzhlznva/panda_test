@@ -65,5 +65,28 @@
   .main-block {
     width: 100%;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: relative;
+    width: 100%;
+
+    @media screen and (max-width: 1200px) {
+      margin: 0 24px 0 0;
+    }
+
+    @media screen and (max-width: 1000px) {
+      margin: 0 10px 0 0;
+    }
+
+    @media screen and (max-width: 950px) {
+      padding: 195px 0 0 0;
+      margin: 0 auto;
+      max-width: calc(100% - 40px);
+    }
+
+    @media screen and (max-width: 550px) {
+      padding: 210px 0 0 0;
+    }
   }
 }

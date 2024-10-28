@@ -39,6 +39,10 @@ const props = defineProps<
   p {
     font-size: var(--small);
     text-transform: capitalize;
+
+    @media screen and (max-width: 400px) {
+      font-size: 12px;
+    }
   }
 
   .day-temp {

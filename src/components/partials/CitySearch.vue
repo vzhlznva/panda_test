@@ -112,6 +112,10 @@ onClickOutside(search, () => {
     gap: 16px;
     align-items: center;
 
+    @media screen and (max-width: 670px) {
+      padding: 12px 30px 12px 24px;
+    }
+
     &.active {
       border-radius: 36px 36px 0 0;
     }

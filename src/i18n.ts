@@ -20,6 +20,7 @@ export function createI18n() {
     fallbackLocale: fallbackLocale,
     messages,
   });
+  moment.locale(locale.value);
   return i18n;
 }
 

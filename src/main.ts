@@ -7,7 +7,7 @@ import {
   Transition,
 } from "vue";
 
-import { createI18n } from "./i18n";
+import { createI18n, locale } from "./i18n";
 import { RouterView } from "vue-router";
 import { createPinia } from "pinia";
 

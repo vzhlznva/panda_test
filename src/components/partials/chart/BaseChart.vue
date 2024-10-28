@@ -52,14 +52,9 @@ watch(() => props.chartOptions, (newOptions, oldOptions) => {
 </script>
 
 <template>
-  <div class="canvas-container" style="position: relative; width:100%; z-index: 1">
-    <canvas ref="canvasRef" style="position: relative; z-index: 0; width:100%; "></canvas>
+  <div class="canvas-container" style="position: relative; width:100%; z-index: 1;">
+    <canvas ref="canvasRef" style="position: relative; z-index: 0; width:100%; height: 100%; aspect-ratio: 2"></canvas>
   </div>
 </template>
 
-<style scoped>
-canvas {
-  height: 100%;
-  width: 100%;
-}
-</style>
+<style lang="scss" scoped></style>

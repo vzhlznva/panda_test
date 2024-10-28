@@ -1,6 +1,9 @@
 // import moment from "moment";
 import moment from "moment-timezone";
+
 import "moment/dist/locale/uk";
+import { locale } from "../i18n";
+
 // https://momentjs.com/docs/#/i18n/
 
 export function formatDate(value: string | Date) {
@@ -55,5 +58,6 @@ export function formatUnixDay(time: number, tz: number) {
   return moment
     .unix(time)
     .utcOffset(tz / 60)
+    .locale(locale.value)
     .format("dddd");
 }

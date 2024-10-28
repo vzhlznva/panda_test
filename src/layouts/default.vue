@@ -1,7 +1,13 @@
+<script setup lang="ts">
+import { useMediaQuery } from '@vueuse/core';
+
+const isSidebarExists = useMediaQuery('(min-width: 951px)')
+
+</script>
 <template>
   <div>
     <main>
-      <Sidebar />
+      <Sidebar v-if="isSidebarExists" />
       <RouterView v-slot="{ Component }">
         <Suspense>
           <transition name="fade-fast" mode="out-in">
@@ -13,7 +19,7 @@
   </div>
 </template>
 
-<style>
+<style lang="scss" scoped>
 main {
   min-height: 100vh;
   width: 100%;
@@ -24,5 +30,9 @@ main {
   gap: 24px;
   padding: 0 0 40px;
   margin: 0 auto;
+
+  @media screen and (max-width: 950px) {
+    flex-direction: column;
+  }
 }
 </style>
