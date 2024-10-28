@@ -26,8 +26,8 @@ jobs:
         run: pnpm run build
       - name: Configure Git
         run: |
-        git config --global user.email "lzheleznova2609@gmail.com"
-        git config --global user.name "vzhlznva"
+          git config --global user.email "lzheleznova2609@gmail.com"
+          git config --global user.name "vzhlznva"
       - name: Deploy to Firebase Hosting
         run: npm run deploy
       - uses: FirebaseExtended/action-hosting-deploy@v0
