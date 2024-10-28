@@ -5,6 +5,7 @@ import moment from 'moment';
 import { useI18n } from 'vue-i18n';
 
 import { WeatherForecast, WeatherChartItem, WeatherState, ReducedWeatherChartItem } from '/@src/types/weather';
+import { locale } from '/@src/i18n';
 
 const props = defineProps<
   {
@@ -79,7 +80,7 @@ const convertForecast = () => {
       const dayData = groupedData[day];
       const dayMoment = moment(day);
 
-      const dayy = index === 0 ? t('days.today') : index === 1 ? t('days.tomorrow') : dayMoment.format('dddd')
+      const dayy = index === 0 ? t('days.today') : index === 1 ? t('days.tomorrow') : dayMoment.locale(locale.value).format('dddd')
       const maxTemp = Math.max(...dayData.map((item: WeatherChartItem) => item.main.temp_max))
       const minTemp = Math.min(...dayData.map((item: WeatherChartItem) => item.main.temp_min))
       const weath = mode(dayData.map((item: WeatherChartItem) => item.weather[0]))
