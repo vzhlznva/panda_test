@@ -1,4 +1,9 @@
-import moment from "moment";
+// import moment from "moment";
+import moment from "moment-timezone";
+
+import "moment/dist/locale/uk";
+import { locale } from "../i18n";
+
 // https://momentjs.com/docs/#/i18n/
 
 export function formatDate(value: string | Date) {
@@ -22,4 +27,37 @@ export function formatDateTime(value: string | Date) {
   if (value) {
     return moment(new Date(value)).format("DD.MM.YYYY HH:mm");
   }
+}
+
+export function formatDay(value: string | Date) {
+  if (value) {
+    return moment(new Date(value)).format("Dddd");
+  }
+}
+
+export function formatDayByTimeZone(tz: string) {
+  if (tz) {
+    return moment(new Date()).tz(tz).format("dddd");
+  }
+}
+
+export function formatDateByTimeZone(tz: string) {
+  if (tz) {
+    return moment(new Date()).tz(tz).format("DD MMM[,] YYYY");
+  }
+}
+
+export function formatUnixTime(time: number, tz: number) {
+  return moment
+    .unix(time)
+    .utcOffset(tz / 60)
+    .format("HH:mm");
+}
+
+export function formatUnixDay(time: number, tz: number) {
+  return moment
+    .unix(time)
+    .utcOffset(tz / 60)
+    .locale(locale.value)
+    .format("dddd");
 }

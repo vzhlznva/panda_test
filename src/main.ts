@@ -7,10 +7,17 @@ import {
   Transition,
 } from "vue";
 
-import { createI18n } from "./i18n";
+import { createI18n, locale } from "./i18n";
 import { RouterView } from "vue-router";
+import { createPinia } from "pinia";
+
 import { createRouter } from "./router";
-import { initApi, apiSymbol } from "/@src/composable/useApi";
+import {
+  initApi,
+  apiSymbol,
+  initGeoApi,
+  apiGeoSymbol,
+} from "/@src/composable/useApi";
 import { initStorage, storageSymbol } from "/@src/composable/useStorage";
 
 async function createApp() {
@@ -18,10 +25,14 @@ async function createApp() {
   const router = createRouter();
   const storage = initStorage();
   const api = initApi();
+  const geoApi = initGeoApi();
+
+  const pinia = createPinia();
 
   const app = createClientApp({
     setup() {
       provide(apiSymbol, api);
+      provide(apiGeoSymbol, geoApi);
       provide(storageSymbol, storage);
 
       return () => {
@@ -53,6 +64,7 @@ async function createApp() {
 
   app.use(router);
   app.use(i18n);
+  app.use(pinia);
 
   return app;
 }
