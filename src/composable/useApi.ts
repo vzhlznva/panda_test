@@ -11,7 +11,7 @@ export const GEO_ROOT = import.meta.env.VITE_GEO_ROOT;
 
 export function initApi() {
   const api = axios.create({
-    baseURL: `https://${API_ROOT}/data/2.5/`,
+    baseURL: `https://api.openweathermap.org/data/2.5/`,
     headers: {
       "Accept-Language": locale.value,
     },
@@ -55,7 +55,7 @@ export function initApi() {
 
 export function initGeoApi() {
   const geoApi = axios.create({
-    baseURL: `https://${GEO_ROOT}/v1/geo/`,
+    baseURL: `https://wft-geo-db.p.rapidapi.com/v1/geo/`,
     headers: {
       "x-rapidapi-key": "8b58007bc2msh850fe94f3deb69ep1fb800jsnae50500d7bda",
       "x-rapidapi-host": "wft-geo-db.p.rapidapi.com",

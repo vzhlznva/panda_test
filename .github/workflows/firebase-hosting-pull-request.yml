@@ -32,9 +32,6 @@ jobs:
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
 
-      - name: Check Firebase token
-        run: echo "Firebase token is ${{ secrets.FIREBASE_TOKEN }}" # Для перевірки, видаліть після тесту
-
       - name: Deploy to Firebase Hosting
         run: firebase deploy --only hosting --token ${{ secrets.FIREBASE_TOKEN }}
 
