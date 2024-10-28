@@ -9,7 +9,7 @@
     "serve": "vite preview --host",
     "test-ts": "vue-tsc --noEmit --skipLibCheck",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "firebase deploy"
   },
   "dependencies": {
     "@intlify/vite-plugin-vue-i18n": "^3.2.1",
