@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { LocationBlock, LocationItem } from '/@src/types/geo';
 import { WeatherService } from '/@src/services/weather';
 import { formatUnixDay, formatUnixTime } from '/@src/utils/formatters';
 import { useBlocksStorage } from '/@src/state/blocks';
 import { locale } from '/@src/i18n';
+import { getImageIcon } from '/@src/utils/images';
 
 
 const props = defineProps<
@@ -20,6 +21,7 @@ const props = defineProps<
 const modal = ref()
 const favModal = ref()
 const limitModal = ref()
+const weatherImage = ref<string | undefined>(undefined)
 
 const weatherService = new WeatherService()
 
@@ -41,6 +43,7 @@ watch(() => props.isCurrent, async () => {
     try {
       const weather = await weatherService.getWeather(props.location?.location?.latitude as number, props.location?.location?.longitude as number)
       blocksStorage.setCurrentCity({ location: props.location?.location as LocationItem, weather: weather, fav: props.location?.fav })
+      weatherImage.value = await getImageIcon(props.location?.weather?.weather[0].icon as string) as string
     } catch (error: any) {
       console.error(error)
     }
@@ -54,10 +57,15 @@ watch(() => locale.value, async () => {
       const weather = await weatherService.getWeather(props.location?.location?.latitude as number, props.location?.location?.longitude as number);
       console.log('after')
       blocksStorage.replaceWeather(weather, props.index)
+      weatherImage.value = await getImageIcon(props.location?.weather?.weather[0].icon as string) as string
     } catch (error: any) {
       console.error(error)
     }
   }
+})
+
+onMounted(async () => {
+  weatherImage.value = await getImageIcon(props.location?.weather?.weather[0].icon as string) as string
 })
 </script>
 
@@ -81,7 +89,7 @@ watch(() => locale.value, async () => {
         <h1 v-if="location?.weather">{{ Math.round(location.weather.main.temp) }}&deg;C</h1>
       </div>
       <div class="card-body__right">
-        <img :src="`/~/images/weather/${location.weather?.weather[0].icon}.png`" alt="" v-if="location?.weather">
+        <img :src="weatherImage" alt="" v-if="location?.weather">
         <div class="card-body__right-temp" v-if="location?.weather">
           <h3>{{ location.weather.weather[0].description }}</h3>
           <p>{{ $t('weather.feels') }} {{ Math.round(location.weather.main.feels_like) }}&deg;C</p>

@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { ReducedWeatherChartItem, WeatherChartItem } from '/@src/types/weather';
 import { formatTime } from '/@src/utils/formatters';
+import { getImageIcon } from '/@src/utils/images';
 
 const props = defineProps<
   {
@@ -10,20 +11,10 @@ const props = defineProps<
   }
 >()
 
-const weatherImages = ref()
 const weatherImage = ref<string | undefined>(undefined)
-
-const getImageIcon = async (icon: string): Promise<string | undefined> => {
-  weatherImages.value = import.meta.glob('/src/assets/images/weather/*.png')
-  if (weatherImages.value[`/src/assets/images/weather/${icon}.png`]) {
-    const module = await weatherImages.value[`/src/assets/images/weather/${icon}.png`]()
-    return module.default
-  } else return undefined
-}
 
 onMounted(async () => {
   weatherImage.value = await getImageIcon(props.item.weather[0].icon) as string
-  console.log(weatherImage.value, weatherImages.value)
 })
 </script>
 

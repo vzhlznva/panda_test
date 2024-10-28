@@ -6,6 +6,7 @@ import { Weather } from '/@src/types/weather';
 import { formatUnixDay, formatUnixTime } from '/@src/utils/formatters';
 import { useBlocksStorage } from '/@src/state/blocks';
 import { locale } from '/@src/i18n';
+import { getImageIcon } from '/@src/utils/images';
 
 const props = defineProps<
   {
@@ -15,6 +16,7 @@ const props = defineProps<
 
 const favModal = ref()
 const currWeather = ref<Weather | null>(null)
+const weatherImage = ref<string | undefined>(undefined)
 
 const service = new WeatherService()
 
@@ -23,6 +25,7 @@ onMounted(async () => {
   if (props.location) {
     try {
       currWeather.value = await service.getWeather(props.location.latitude, props.location.longitude);
+      weatherImage.value = await getImageIcon(currWeather.value.weather[0].icon) as string
     } catch (error: any) {
       console.error(error)
     }
@@ -33,6 +36,7 @@ watch(() => locale.value, async () => {
   if (props.location) {
     try {
       currWeather.value = await service.getWeather(props.location.latitude, props.location.longitude);
+      weatherImage.value = await getImageIcon(currWeather.value.weather[0].icon) as string
     } catch (error: any) {
       console.error(error)
     }
@@ -57,7 +61,7 @@ watch(() => locale.value, async () => {
           <h1 v-if="currWeather">{{ Math.round(currWeather.main.temp) }}&deg;C</h1>
         </div>
         <div class="favorite-body__right">
-          <img :src="`/~/images/weather/${currWeather?.weather[0].icon}.png`" alt="" v-if="currWeather">
+          <img :src="weatherImage" alt="" v-if="currWeather">
           <div class="favorite-body__right-temp" v-if="currWeather">
             <h2>{{ currWeather.weather[0].description }}</h2>
             <p>{{ $t('weather.feels') }} {{ Math.round(currWeather.main.feels_like) }}&deg;C</p>
