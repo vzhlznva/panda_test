@@ -5,7 +5,7 @@
   "homepage": "https://vzhlznva.github.io/panda_test/",
   "scripts": {
     "dev": "vite --host",
-    "build": "vue-tsc --noEmit --skipLibCheck && vite build",
+    "build": "vite build",
     "serve": "vite preview --host",
     "test-ts": "vue-tsc --noEmit --skipLibCheck",
     "predeploy": "npm run build",
