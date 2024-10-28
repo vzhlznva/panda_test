@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { Carousel, Slide, Navigation } from 'vue3-carousel';
 import moment from 'moment';
 import { useI18n } from 'vue-i18n';
 
 import { WeatherForecast, WeatherChartItem, WeatherState, ReducedWeatherChartItem } from '/@src/types/weather';
+import { locale } from '/@src/i18n';
 
 const props = defineProps<
   {
@@ -14,7 +15,7 @@ const props = defineProps<
 >()
 
 const config = {
-  itemsToShow: 8,
+  itemsToShow: computed(() => props.days == 1 ? 8 : 5).value,
   snapAlign: 'start',
   breakpoints: {
     200: {
@@ -30,15 +31,15 @@ const config = {
       snapAlign: 'start',
     },
     800: {
-      itemsToShow: 6,
+      itemsToShow: computed(() => props.days == 1 ? 6 : 5).value,
       snapAlign: 'start',
     },
     1000: {
-      itemsToShow: 6,
+      itemsToShow: computed(() => props.days == 1 ? 6 : 5).value,
       snapAlign: 'start',
     },
     1250: {
-      itemsToShow: 8,
+      itemsToShow: computed(() => props.days == 1 ? 8 : 5).value,
       snapAlign: 'start',
     },
   }
@@ -79,7 +80,7 @@ const convertForecast = () => {
       const dayData = groupedData[day];
       const dayMoment = moment(day);
 
-      const dayy = index === 0 ? t('days.today') : index === 1 ? t('days.tomorrow') : dayMoment.format('dddd')
+      const dayy = index === 0 ? t('days.today') : index === 1 ? t('days.tomorrow') : dayMoment.locale(locale.value).format('dddd')
       const maxTemp = Math.max(...dayData.map((item: WeatherChartItem) => item.main.temp_max))
       const minTemp = Math.min(...dayData.map((item: WeatherChartItem) => item.main.temp_min))
       const weath = mode(dayData.map((item: WeatherChartItem) => item.weather[0]))

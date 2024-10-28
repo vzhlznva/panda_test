@@ -5,11 +5,11 @@
   "homepage": "https://vzhlznva.github.io/panda_test/",
   "scripts": {
     "dev": "vite --host",
-    "build": "vue-tsc --noEmit --skipLibCheck && vite build",
+    "build": "vite build",
     "serve": "vite preview --host",
     "test-ts": "vue-tsc --noEmit --skipLibCheck",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "npx firebase-tools deploy"
   },
   "dependencies": {
     "@intlify/vite-plugin-vue-i18n": "^3.2.1",
@@ -33,6 +33,8 @@
     "@types/node": "22.7.9",
     "@types/nprogress": "0.2.0",
     "@vitejs/plugin-vue": "5.1.4",
+    "firebase": "^11.0.1",
+    "firebase-tools": "^13.23.0",
     "gh-pages": "^6.2.0",
     "sass": "1.80.4",
     "typescript": "5.6.3",
