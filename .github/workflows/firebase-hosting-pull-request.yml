@@ -14,24 +14,26 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: "18"
+
       - name: Install pnpm
         run: npm install -g pnpm
+
       - name: Install dependencies
-        run: pnpm install
-      - name: Install Firebase CLI
-        run: npm install -g firebase-tools
+        run: pnpm install --no-frozen-lockfile
+
       - name: Build project
         run: pnpm run build
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
       - name: Deploy to Firebase Hosting
-        run: pnpm run deploy
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_VZHLZNVA_PANDA_TEST }}
-          projectId: vzhlznva-panda-test
-          VITE_API_ROOT: api.openweathermap.org
-          VITE_GEO_ROOT: wft-geo-db.p.rapidapi.com
+        run: firebase deploy --only hosting --token ${{ secrets.FIREBASE_TOKEN }}
+
+      - name: Notify deployment success
+        run: echo "Deployment successful! Visit "
